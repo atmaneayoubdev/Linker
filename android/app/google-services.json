@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "968171744024",
+    "project_id": "linker-d6d0f",
+    "storage_bucket": "linker-d6d0f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:968171744024:android:503e54715309a314034c6d",
+        "android_client_info": {
+          "package_name": "com.example.linker"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "968171744024-pjhagu65fut4p4nebpfi38iumrh2ogfj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD0-zSxtqrJYjPnJu26uCiWqlLO-EUvsiE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "968171744024-pjhagu65fut4p4nebpfi38iumrh2ogfj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
