@@ -31,11 +31,9 @@ class _ChatsViewState extends State<ChatsView> {
   String userNewMessagesCount = '';
   String storesNewMessagesCount = '';
 
-  Future getUserChats() async {
+  Future getUserChats(bool isFirst) async {
     setState(() {
-      isLoading = true;
-      _userMessages.clear();
-      _newUserMessages.clear();
+      isLoading = isFirst ? true : false;
     });
     await ChatController.getChat(
       deviceToken:
@@ -44,6 +42,8 @@ class _ChatsViewState extends State<ChatsView> {
       type: "default",
     ).then((value) {
       if (value.runtimeType == ChatListModel) {
+        _userMessages.clear();
+        _newUserMessages.clear();
         for (var chat in value.chats) {
           chat.lastMessage.seen == "false" && chat.lastMessage.sendBy != "you"
               ? _newUserMessages.add(chat)
@@ -67,11 +67,9 @@ class _ChatsViewState extends State<ChatsView> {
     });
   }
 
-  Future getStoreChats() async {
+  Future getStoreChats(bool isFirst) async {
     setState(() {
-      isLoading = true;
-      _storesMessages.clear();
-      _newStoreMessages.clear();
+      isLoading = isFirst ? true : false;
     });
     await ChatController.getChat(
       deviceToken:
@@ -80,6 +78,8 @@ class _ChatsViewState extends State<ChatsView> {
       type: "store",
     ).then((value) {
       if (value.runtimeType == ChatListModel) {
+        _storesMessages.clear();
+        _newStoreMessages.clear();
         for (var chat in value.chats) {
           chat.lastMessage.seen == "false" && chat.lastMessage.sendBy != "you"
               ? _newStoreMessages.add(chat)
@@ -96,8 +96,8 @@ class _ChatsViewState extends State<ChatsView> {
   @override
   void initState() {
     getNotificationsCount();
-    getUserChats();
-    getStoreChats();
+    getUserChats(true);
+    getStoreChats(true);
     super.initState();
   }
 
@@ -113,160 +113,179 @@ class _ChatsViewState extends State<ChatsView> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
-        child: RefreshIndicator(
-          displacement: 0,
-          onRefresh: () async {
-            getNotificationsCount();
-
-            getUserChats();
-            getStoreChats();
-          },
-          child: SingleChildScrollView(
-            physics: const AlwaysScrollableScrollPhysics(),
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 15.w),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  20.verticalSpace,
-                  MessagesTabWidget(
-                    callback: callback,
-                    isStoreMessages: _isStoreMessages,
-                  ),
-                  if ((_isStoreMessages && _newStoreMessages.isNotEmpty) ||
-                      (!_isStoreMessages && _newUserMessages.isNotEmpty))
-                    20.verticalSpace,
-                  if ((_isStoreMessages && _newStoreMessages.isNotEmpty) ||
-                      (!_isStoreMessages && _newUserMessages.isNotEmpty))
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
+        child: LayoutBuilder(
+          builder: (BuildContext context, BoxConstraints constraints) {
+            return RefreshIndicator(
+              displacement: 0,
+              onRefresh: () async {
+                getNotificationsCount();
+                getUserChats(true);
+                getStoreChats(true);
+              },
+              child: ConstrainedBox(
+                constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                child: SingleChildScrollView(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 15.w),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.max,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Text(
-                          'محادثات جديده',
-                          style: Theme.of(context).textTheme.bodyMedium!.apply(
-                                color: kBleuColor,
-                              ),
+                        20.verticalSpace,
+                        MessagesTabWidget(
+                          callback: callback,
+                          isStoreMessages: _isStoreMessages,
                         ),
-                        10.horizontalSpace,
-                        Container(
-                          padding: EdgeInsets.symmetric(horizontal: 10.w),
-                          decoration: const BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: kBleuColor,
-                          ),
-                          child: Center(
-                            child: Text(
-                              _isStoreMessages
-                                  ? storesNewMessagesCount
-                                  : userNewMessagesCount,
-                              style:
-                                  Theme.of(context).textTheme.bodyMedium!.apply(
-                                        color: Colors.white,
-                                      ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  15.verticalSpace,
-                  if (isLoading) const MessagesItemShimmer(isNew: true),
-                  if (!isLoading)
-                    ListView.separated(
-                      itemCount: _isStoreMessages
-                          ? _newStoreMessages.length
-                          : _newUserMessages.length,
-                      padding: EdgeInsets.zero,
-                      physics: const NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      separatorBuilder: (BuildContext context, int index) {
-                        return 10.verticalSpace;
-                      },
-                      itemBuilder: (BuildContext context, int index) {
-                        ChatModel chat = _isStoreMessages == true
-                            ? _newStoreMessages[index]
-                            : _newUserMessages[index];
-                        return GestureDetector(
-                          onTap: () => Navigator.of(context)
-                              .push(
-                            MaterialPageRoute(
-                              builder: (context) => MessagesView(
-                                isStore: _isStoreMessages,
-                                chatId: _isStoreMessages == true
-                                    ? _newStoreMessages[index].id
-                                    : _newUserMessages[index].id,
+                        if ((_isStoreMessages &&
+                                _newStoreMessages.isNotEmpty) ||
+                            (!_isStoreMessages && _newUserMessages.isNotEmpty))
+                          20.verticalSpace,
+                        if ((_isStoreMessages &&
+                                _newStoreMessages.isNotEmpty) ||
+                            (!_isStoreMessages && _newUserMessages.isNotEmpty))
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Text(
+                                'محادثات جديده',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium!
+                                    .apply(
+                                      color: kBleuColor,
+                                    ),
                               ),
-                            ),
-                          )
-                              .then((value) {
-                            getUserChats();
-                            getStoreChats();
-                          }),
-                          child: ChatItemWidget(
-                            isNew: true,
-                            message: chat,
-                            isStoreMessages: _isStoreMessages,
-                          ),
-                        );
-                      },
-                    ),
-                  20.verticalSpace,
-                  if ((_isStoreMessages && _storesMessages.isNotEmpty) ||
-                      (!_isStoreMessages && _userMessages.isNotEmpty))
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Text(
-                          'جميع المحادثات',
-                          style: Theme.of(context).textTheme.bodyMedium!.apply(
-                                color: kTextColor,
+                              10.horizontalSpace,
+                              Container(
+                                padding: EdgeInsets.symmetric(horizontal: 10.w),
+                                decoration: const BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: kBleuColor,
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    _isStoreMessages
+                                        ? storesNewMessagesCount
+                                        : userNewMessagesCount,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium!
+                                        .apply(
+                                          color: Colors.white,
+                                        ),
+                                  ),
+                                ),
                               ),
-                        ),
-                      ],
-                    ),
-                  15.verticalSpace,
-                  if (isLoading) const MessagesItemShimmer(isNew: false),
-                  if (!isLoading)
-                    ListView.separated(
-                      itemCount: _isStoreMessages
-                          ? _storesMessages.length
-                          : _userMessages.length,
-                      padding: EdgeInsets.zero,
-                      physics: const NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      separatorBuilder: (BuildContext context, int index) {
-                        return 10.verticalSpace;
-                      },
-                      itemBuilder: (BuildContext context, int index) {
-                        ChatModel chat = _isStoreMessages == true
-                            ? _storesMessages[index]
-                            : _userMessages[index];
-                        return GestureDetector(
-                          onTap: () => Navigator.of(context)
-                              .push(
-                            MaterialPageRoute(
-                                builder: (context) => MessagesView(
+                            ],
+                          ),
+                        15.verticalSpace,
+                        if (isLoading) const MessagesItemShimmer(isNew: true),
+                        if (!isLoading)
+                          ListView.separated(
+                            itemCount: _isStoreMessages
+                                ? _newStoreMessages.length
+                                : _newUserMessages.length,
+                            padding: EdgeInsets.zero,
+                            physics: const NeverScrollableScrollPhysics(),
+                            shrinkWrap: true,
+                            separatorBuilder:
+                                (BuildContext context, int index) {
+                              return 10.verticalSpace;
+                            },
+                            itemBuilder: (BuildContext context, int index) {
+                              ChatModel chat = _isStoreMessages == true
+                                  ? _newStoreMessages[index]
+                                  : _newUserMessages[index];
+                              return GestureDetector(
+                                onTap: () => Navigator.of(context)
+                                    .push(
+                                  MaterialPageRoute(
+                                    builder: (context) => MessagesView(
                                       isStore: _isStoreMessages,
                                       chatId: _isStoreMessages == true
-                                          ? _storesMessages[index].id
-                                          : _userMessages[index].id,
-                                    )),
-                          )
-                              .then((value) {
-                            getUserChats();
-                            getStoreChats();
-                          }),
-                          child: ChatItemWidget(
-                            isNew: false,
-                            message: chat,
-                            isStoreMessages: _isStoreMessages,
+                                          ? _newStoreMessages[index].id
+                                          : _newUserMessages[index].id,
+                                    ),
+                                  ),
+                                )
+                                    .then((value) {
+                                  getUserChats(false);
+                                  getStoreChats(false);
+                                }),
+                                child: ChatItemWidget(
+                                  isNew: true,
+                                  message: chat,
+                                  isStoreMessages: _isStoreMessages,
+                                ),
+                              );
+                            },
                           ),
-                        );
-                      },
+                        20.verticalSpace,
+                        if ((_isStoreMessages && _storesMessages.isNotEmpty) ||
+                            (!_isStoreMessages && _userMessages.isNotEmpty))
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Text(
+                                'جميع المحادثات',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium!
+                                    .apply(
+                                      color: kTextColor,
+                                    ),
+                              ),
+                            ],
+                          ),
+                        15.verticalSpace,
+                        if (isLoading) const MessagesItemShimmer(isNew: false),
+                        if (!isLoading)
+                          ListView.separated(
+                            itemCount: _isStoreMessages
+                                ? _storesMessages.length
+                                : _userMessages.length,
+                            padding: EdgeInsets.zero,
+                            physics: const NeverScrollableScrollPhysics(),
+                            shrinkWrap: true,
+                            separatorBuilder:
+                                (BuildContext context, int index) {
+                              return 10.verticalSpace;
+                            },
+                            itemBuilder: (BuildContext context, int index) {
+                              ChatModel chat = _isStoreMessages == true
+                                  ? _storesMessages[index]
+                                  : _userMessages[index];
+                              return GestureDetector(
+                                onTap: () => Navigator.of(context)
+                                    .push(
+                                  MaterialPageRoute(
+                                      builder: (context) => MessagesView(
+                                            isStore: _isStoreMessages,
+                                            chatId: _isStoreMessages == true
+                                                ? _storesMessages[index].id
+                                                : _userMessages[index].id,
+                                          )),
+                                )
+                                    .then((value) {
+                                  getUserChats(false);
+                                  getStoreChats(false);
+                                }),
+                                child: ChatItemWidget(
+                                  isNew: false,
+                                  message: chat,
+                                  isStoreMessages: _isStoreMessages,
+                                ),
+                              );
+                            },
+                          ),
+                      ],
                     ),
-                ],
+                  ),
+                ),
               ),
-            ),
-          ),
+            );
+          },
         ),
       ),
     );

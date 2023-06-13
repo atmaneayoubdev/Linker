@@ -68,26 +68,10 @@ class CommentWidget extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    comment.user.username,
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyLarge!
-                        .apply(
-                          color: kTextColor,
-                        )
-                        .copyWith(fontSize: 15.sp),
-                  ),
-                  Text(
-                    comment.user.job,
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyMedium!
-                        .apply(
-                          color: kLightBlackColor,
-                        )
-                        .copyWith(fontSize: 12.sp),
-                  )
+                  Text(comment.user.username,
+                      style: Theme.of(context).textTheme.bodyLarge!),
+                  Text(comment.user.job,
+                      style: Theme.of(context).textTheme.bodySmall!)
                 ],
               )
             ],

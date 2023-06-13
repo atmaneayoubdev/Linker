@@ -14,6 +14,7 @@ import 'package:provider/provider.dart';
 
 import '../../../controllers/story_controller.dart';
 import '../../../helpers/messaging_provider.dart';
+import '../../additional/views/profile_view.dart';
 import '../../home/views/show_post_view.dart';
 import '../../home/views/show_shared_post_view.dart';
 import '../../home/views/stories_page_view.dart';
@@ -90,6 +91,21 @@ class _NotificationsViewState extends State<NotificationsView> {
                       )));
       }
     });
+  }
+
+  void onUserTap(id) async {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ProfileView(
+            userId: id,
+            isMyProfile: id ==
+                Provider.of<UserProvider>(
+                  context,
+                  listen: false,
+                ).user.id,
+          ),
+        ));
   }
 
   @override
@@ -213,6 +229,11 @@ class _NotificationsViewState extends State<NotificationsView> {
                                                 debugPrint(
                                                     notification.modelId);
                                                 onPostTap(notification.modelId);
+                                              }
+
+                                              if (notification.modelType ==
+                                                  "follow") {
+                                                onUserTap(notification.modelId);
                                               }
                                             },
                                             child: NotificationWidget(

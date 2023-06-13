@@ -181,7 +181,7 @@ class AuthController with ChangeNotifier {
       } else if (response.statusCode == 400) {
         if (response.data['message'].toString() == "بيانات مفقوده") {
           return {
-            'message': response.data['message'].toString(),
+            'message': response.data['errors'].first["value"].toString(),
           };
         } else {
           return {

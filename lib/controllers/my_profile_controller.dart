@@ -301,13 +301,13 @@ class MyProfileController with ChangeNotifier {
 
           return user;
         }
-        if (response.statusCode == 400) {
-          return response.data['message'];
-        }
+      }
+      if (response.statusCode == 400) {
+        return response.data['message'];
       }
     } on DioError catch (error) {
       debugPrint(error.message.toString());
-      return error.response;
+      return error.response!.data["message"];
     }
   }
 

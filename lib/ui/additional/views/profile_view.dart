@@ -31,6 +31,7 @@ class _ProfileViewState extends State<ProfileView> {
   List<PostModel> posts = [];
   bool isLoading = false;
   bool isPostsLoading = false;
+  bool userExists = true;
 
   Future getPosts() async {
     setState(() {
@@ -62,10 +63,16 @@ class _ProfileViewState extends State<ProfileView> {
       token: Provider.of<UserProvider>(context, listen: false).user.apiToken,
       userId: widget.userId!,
     ).then((value) {
+      debugPrint(value.toString());
       if (value.runtimeType == OtherUser) {
         setState(() {
           user = value;
           isLoading = false;
+        });
+      }
+      if (value == "This User not found") {
+        setState(() {
+          userExists = false;
         });
       }
     });
@@ -163,117 +170,134 @@ class _ProfileViewState extends State<ProfileView> {
                           height: double.infinity,
                           width: double.infinity,
                           color: Colors.white,
-                          child: SingleChildScrollView(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                isLoading
-                                    ? const ProfileCardShimmer()
-                                    : ProfileCardWidget(
-                                        otherUser:
-                                            !widget.isMyProfile ? user! : null,
-                                        user: !widget.isMyProfile
-                                            ? null
-                                            : Provider.of<UserProvider>(context,
-                                                    listen: false)
-                                                .user,
-                                        isMyProfile: widget.isMyProfile,
+                          child: RefreshIndicator(
+                            displacement: 0,
+                            onRefresh: () async {
+                              if (widget.isMyProfile) {
+                                getPosts();
+                              } else {
+                                debugPrint(widget.userId.toString());
+                                showProfile();
+                                showProfilePosts();
+                              }
+                            },
+                            child: SingleChildScrollView(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  isLoading
+                                      ? const ProfileCardShimmer()
+                                      : ProfileCardWidget(
+                                          otherUser: !widget.isMyProfile
+                                              ? user!
+                                              : null,
+                                          user: !widget.isMyProfile
+                                              ? null
+                                              : Provider.of<UserProvider>(
+                                                      context,
+                                                      listen: false)
+                                                  .user,
+                                          isMyProfile: widget.isMyProfile,
+                                        ),
+                                  10.verticalSpace,
+                                  if (isPostsLoading)
+                                    Padding(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 15.w),
+                                      child: const PostShimmer(
+                                        isHome: false,
                                       ),
-                                10.verticalSpace,
-                                if (isPostsLoading)
-                                  Padding(
-                                    padding:
-                                        EdgeInsets.symmetric(horizontal: 15.w),
-                                    child: const PostShimmer(
-                                      isHome: false,
                                     ),
-                                  ),
-                                if (!isPostsLoading)
-                                  posts.isNotEmpty
-                                      ? ListView.separated(
-                                          padding: EdgeInsets.zero,
-                                          shrinkWrap: true,
-                                          physics:
-                                              const NeverScrollableScrollPhysics(),
-                                          itemCount: posts.length,
-                                          separatorBuilder:
-                                              (BuildContext context,
-                                                  int index) {
-                                            return 10.verticalSpace;
-                                          },
-                                          itemBuilder: (BuildContext context,
-                                              int index) {
-                                            PostModel post = posts[index];
-                                            return post.postTypeInfo != null
-                                                ? SharedPostWidget(
-                                                    canShowProfile: false,
-                                                    post: post,
-                                                    hasChanged: () {
-                                                      if (widget.isMyProfile) {
-                                                        getPosts();
-                                                      } else {
-                                                        showProfilePosts();
-                                                      }
-                                                    },
-                                                  )
-                                                : post.postTypeInfoProduct !=
-                                                        null
-                                                    ? SharedProductWidget(
-                                                        canShowProfile: false,
-                                                        post: post,
-                                                        hasChanged: () {
-                                                          if (widget
-                                                              .isMyProfile) {
-                                                            getPosts();
-                                                          } else {
-                                                            showProfilePosts();
-                                                          }
-                                                        },
-                                                      )
-                                                    : post.postTypeInfoStore !=
-                                                            null
-                                                        ? SharedStoreWidget(
-                                                            canShowProfile:
-                                                                false,
-                                                            post: post,
-                                                            hasChanged: () {
-                                                              if (widget
-                                                                  .isMyProfile) {
-                                                                getPosts();
-                                                              } else {
-                                                                showProfilePosts();
-                                                              }
-                                                            })
-                                                        : PostWidget(
-                                                            canShowProfile:
-                                                                false,
-                                                            hasChanged: () {
-                                                              if (widget
-                                                                  .isMyProfile) {
-                                                                getPosts();
-                                                              } else {
-                                                                showProfilePosts();
-                                                              }
-                                                            },
-                                                            post: post,
-                                                          );
-                                          },
-                                        )
-                                      : SizedBox(
-                                          height: 500.h,
-                                          child: Center(
-                                            child: Text(
-                                              "ليس لديك منشورات",
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .bodyLarge!
-                                                  .apply(
-                                                    color: kTextColor,
-                                                  ),
+                                  if (!isPostsLoading)
+                                    posts.isNotEmpty
+                                        ? ListView.separated(
+                                            padding: EdgeInsets.zero,
+                                            shrinkWrap: true,
+                                            physics:
+                                                const NeverScrollableScrollPhysics(),
+                                            itemCount: posts.length,
+                                            separatorBuilder:
+                                                (BuildContext context,
+                                                    int index) {
+                                              return 10.verticalSpace;
+                                            },
+                                            itemBuilder: (BuildContext context,
+                                                int index) {
+                                              PostModel post = posts[index];
+                                              return post.postTypeInfo != null
+                                                  ? SharedPostWidget(
+                                                      canShowProfile: false,
+                                                      post: post,
+                                                      hasChanged: () {
+                                                        if (widget
+                                                            .isMyProfile) {
+                                                          getPosts();
+                                                        } else {
+                                                          showProfilePosts();
+                                                        }
+                                                      },
+                                                    )
+                                                  : post.postTypeInfoProduct !=
+                                                          null
+                                                      ? SharedProductWidget(
+                                                          canShowProfile: false,
+                                                          post: post,
+                                                          hasChanged: () {
+                                                            if (widget
+                                                                .isMyProfile) {
+                                                              getPosts();
+                                                            } else {
+                                                              showProfilePosts();
+                                                            }
+                                                          },
+                                                        )
+                                                      : post.postTypeInfoStore !=
+                                                              null
+                                                          ? SharedStoreWidget(
+                                                              canShowProfile:
+                                                                  false,
+                                                              post: post,
+                                                              hasChanged: () {
+                                                                if (widget
+                                                                    .isMyProfile) {
+                                                                  getPosts();
+                                                                } else {
+                                                                  showProfilePosts();
+                                                                }
+                                                              })
+                                                          : PostWidget(
+                                                              canShowProfile:
+                                                                  false,
+                                                              hasChanged: () {
+                                                                if (widget
+                                                                    .isMyProfile) {
+                                                                  getPosts();
+                                                                } else {
+                                                                  showProfilePosts();
+                                                                }
+                                                              },
+                                                              post: post,
+                                                            );
+                                            },
+                                          )
+                                        : SizedBox(
+                                            height: 430.h,
+                                            child: Center(
+                                              child: Text(
+                                                !userExists
+                                                    ? "هذا المستخدم لم يعد موجودا"
+                                                    : "لا يوجد منشورات للعرض...",
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .bodyLarge!
+                                                    .apply(
+                                                      color: kTextColor,
+                                                    ),
+                                              ),
                                             ),
                                           ),
-                                        ),
-                              ],
+                                ],
+                              ),
                             ),
                           ),
                         ),

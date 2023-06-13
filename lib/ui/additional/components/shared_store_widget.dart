@@ -74,7 +74,7 @@ class _SharedStoreWidgetState extends State<SharedStoreWidget> {
               showMenue: false,
               onDelete: () {},
               onEdit: () {},
-              userId: widget.post.id,
+              userId: widget.post.user.id,
               createdAt: widget.post.createdAt,
               image: widget.post.user.avatar,
               jobTitle: widget.post.user.job,

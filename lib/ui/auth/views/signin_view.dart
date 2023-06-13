@@ -92,7 +92,6 @@ class _SignInViewState extends State<SignInView> {
                             TextFormField(
                               style: Theme.of(context).textTheme.titleMedium,
                               controller: username,
-                              onTap: () => username.clear(),
                               validator: (value) {
                                 if (username.text.isEmpty) {
                                   if (value == null || value.isEmpty) {
@@ -177,9 +176,9 @@ class _SignInViewState extends State<SignInView> {
                                     await AuthController.login(
                                       deviceToken:
                                           Provider.of<MessagingProvider>(
-                                                  context,
-                                                  listen: false)
-                                              .deviceToken,
+                                        context,
+                                        listen: false,
+                                      ).deviceToken,
                                       phoneNumber: userNameOrPhone,
                                       password: password.text,
                                     ).then((value) {

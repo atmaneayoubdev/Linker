@@ -16,6 +16,7 @@ import 'package:provider/provider.dart';
 
 import '../../../helpers/messaging_provider.dart';
 import '../../common/loading_widget.dart';
+import '../components/create_store_bottom_sheet.dart';
 import '../components/subscription_item_widget.dart';
 
 class SubscriptionView extends StatefulWidget {
@@ -67,6 +68,7 @@ class _SubscriptionViewState extends State<SubscriptionView> {
 
   @override
   void initState() {
+    debugPrint(widget.phone);
     getPlans();
     super.initState();
   }
@@ -74,60 +76,46 @@ class _SubscriptionViewState extends State<SubscriptionView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: kDarkColor,
-      body: Stack(
-        children: [
-          Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              76.verticalSpace,
-              Expanded(
-                child: Container(
-                  height: double.infinity,
-                  width: double.infinity,
-                  padding: EdgeInsets.only(
-                    top: 10.w,
-                    right: 10.w,
-                    left: 10.w,
-                  ),
-                  decoration: BoxDecoration(
-                    color: const Color.fromRGBO(248, 248, 248, 1),
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(38.r),
-                      topRight: Radius.circular(38.r),
-                    ),
-                  ),
+      backgroundColor: const Color.fromRGBO(247, 249, 250, 1),
+      body: SafeArea(
+        child: Stack(
+          children: [
+            Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
                   child: Container(
                     height: double.infinity,
                     width: double.infinity,
-                    //padding: EdgeInsets.symmetric(horizontal: 15.w),
+                    padding: EdgeInsets.only(
+                      top: 10.w,
+                      right: 10.w,
+                      left: 10.w,
+                    ),
                     decoration: BoxDecoration(
+                      color: const Color.fromRGBO(248, 248, 248, 1),
                       borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(38.r),
                         topRight: Radius.circular(38.r),
                       ),
-                      color: Colors.white,
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Container(
-                          height: 150.h,
+                          height: 100.h,
                           width: double.infinity,
-                          padding: EdgeInsets.symmetric(
-                              vertical: 10.h, horizontal: 20.w),
+                          padding: EdgeInsets.symmetric(horizontal: 23.h),
                           decoration: BoxDecoration(
+                            color: klighSkyBleu,
                             borderRadius: BorderRadius.only(
                                 topLeft: Radius.circular(38.r),
                                 topRight: Radius.circular(38.r)),
-                            color: klighSkyBleu,
                           ),
-                          child: const Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              BackButtonWidget(),
-                            ],
+                          child: const Align(
+                            alignment: Alignment.topRight,
+                            child: BackButtonWidget(),
                           ),
                         ),
                         Expanded(
@@ -232,9 +220,9 @@ class _SubscriptionViewState extends State<SubscriptionView> {
                                       await MarketController.createStore(
                                         deviceToken:
                                             Provider.of<MessagingProvider>(
-                                                    context,
-                                                    listen: false)
-                                                .deviceToken,
+                                          context,
+                                          listen: false,
+                                        ).deviceToken,
                                         token: Provider.of<UserProvider>(
                                           context,
                                           listen: false,
@@ -251,19 +239,8 @@ class _SubscriptionViewState extends State<SubscriptionView> {
                                         setState(() {
                                           isSending = false;
                                         });
-                                        if (value.length == 4) {
-                                          // ScaffoldMessenger.of(context)
-                                          //     .showSnackBar(SnackBar(
-                                          //         backgroundColor: kDarkColor,
-                                          //         content: Text(
-                                          //           value.toString(),
-                                          //           style: Theme.of(context)
-                                          //               .textTheme
-                                          //               .bodySmall!
-                                          //               .apply(
-                                          //                   color:
-                                          //                       Colors.white),
-                                          //         )));
+                                        debugPrint(value['check_otp']);
+                                        if (value["check_otp"] == "true") {
                                           Navigator.of(context).pushReplacement(
                                             MaterialPageRoute(
                                               builder: ((context) =>
@@ -272,13 +249,28 @@ class _SubscriptionViewState extends State<SubscriptionView> {
                                                   )),
                                             ),
                                           );
-                                        } else {
+                                        }
+                                        if (value["check_otp"] == "false") {
+                                          showModalBottomSheet(
+                                              backgroundColor:
+                                                  Colors.transparent,
+                                              context: context,
+                                              builder: ((context) {
+                                                return const CreateStoreBottomSheet();
+                                              })).then((value) {
+                                            Navigator.pop(context);
+                                            Navigator.pop(context);
+                                          });
+                                        }
+
+                                        if (value["message"] !=
+                                            "تم إرسال طلبك بنجاح") {
                                           ScaffoldMessenger.of(context)
                                               .showSnackBar(
                                             SnackBar(
                                               backgroundColor: Colors.red,
                                               content: Text(
-                                                value,
+                                                value["message"],
                                                 style: Theme.of(context)
                                                     .textTheme
                                                     .bodySmall!
@@ -306,37 +298,37 @@ class _SubscriptionViewState extends State<SubscriptionView> {
                     ),
                   ),
                 ),
-              ),
-            ],
-          ),
-          Column(
-            children: [
-              200.verticalSpace,
-              Container(
-                height: 65.h,
-                width: 200.w,
-                margin: EdgeInsets.symmetric(horizontal: 20.w),
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(30.r),
-                    boxShadow: const [
-                      BoxShadow(
-                        offset: Offset(0, 3),
-                        blurRadius: 5,
-                        spreadRadius: 5,
-                        color: Color.fromARGB(5, 0, 0, 0),
-                      )
-                    ]),
-                child: Center(
-                  child: Text(
-                    'نوع الباقة',
-                    style: GoogleFonts.almaraiTextTheme().titleMedium,
+              ],
+            ),
+            Column(
+              children: [
+                70.verticalSpace,
+                Container(
+                  height: 65.h,
+                  width: 200.w,
+                  margin: EdgeInsets.symmetric(horizontal: 20.w),
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(30.r),
+                      boxShadow: const [
+                        BoxShadow(
+                          offset: Offset(0, 3),
+                          blurRadius: 5,
+                          spreadRadius: 5,
+                          color: Color.fromARGB(5, 0, 0, 0),
+                        )
+                      ]),
+                  child: Center(
+                    child: Text(
+                      'نوع الباقة',
+                      style: GoogleFonts.almaraiTextTheme().titleMedium,
+                    ),
                   ),
                 ),
-              ),
-            ],
-          )
-        ],
+              ],
+            )
+          ],
+        ),
       ),
     );
   }

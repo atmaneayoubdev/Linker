@@ -466,11 +466,12 @@ class MarketController with ChangeNotifier {
           headers: headers,
         ),
       );
+      debugPrint(response.data.toString());
 
       if (response.statusCode == 200 &&
           response.data['message'].toString() ==
               "تم إرسال رساله علي الجوال الخاص بك") {
-        return response.data['otp'].toString();
+        return response.data['message'].toString();
       } else {
         return response.data['message'].toString();
       }
@@ -522,12 +523,16 @@ class MarketController with ChangeNotifier {
         ),
         data: formData,
       );
+      debugPrint(response.data.toString());
 
       if (response.statusCode == 200 &&
           response.data['message'].toString() == "تم إرسال طلبك بنجاح") {
-        return response.data['data']['otp'].toString();
+        return {
+          'message': response.data['message'].toString(),
+          'check_otp': response.data['data']['phone_check'].toString(),
+        };
       } else {
-        return response.data['message'].toString();
+        return {"message": response.data['errors'].first['value'].toString()};
       }
     } on DioError catch (error) {
       log(error.toString());
@@ -564,6 +569,7 @@ class MarketController with ChangeNotifier {
         ),
         data: formData,
       );
+      debugPrint(response.data.toString());
 
       return response.data['message'].toString();
     } on DioError catch (error) {
@@ -588,6 +594,7 @@ class MarketController with ChangeNotifier {
           'Authorization': "Bearer $token",
         }),
       );
+
       if (response.statusCode == 200) {
         return StoreModel.fromJson(response.data["data"]);
       }

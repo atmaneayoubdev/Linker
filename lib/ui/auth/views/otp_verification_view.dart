@@ -15,6 +15,7 @@ import 'package:provider/provider.dart';
 
 import '../../../helpers/messaging_provider.dart';
 import '../../../helpers/user_provider.dart';
+import '../../additional/components/create_store_bottom_sheet.dart';
 import '../../common/loading_widget.dart';
 
 class OtpVerificationView extends StatefulWidget {
@@ -109,45 +110,10 @@ class _OtpVerificationViewState extends State<OtpVerificationView> {
             backgroundColor: Colors.transparent,
             context: context,
             builder: ((context) {
-              return Container(
-                height: 800.h,
-                width: 400.w,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(38.r),
-                    topRight: Radius.circular(38.r),
-                  ),
-                ),
-                padding: EdgeInsets.symmetric(
-                  vertical: 5.h,
-                  horizontal: 13.w,
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Image.asset(
-                      'assets/images/subscribed.png',
-                      height: 225.h,
-                      width: 225.w,
-                    ),
-                    0.verticalSpace,
-                    Text('تم التسجيل بنجاج',
-                        style: Theme.of(context).textTheme.titleMedium),
-                    30.verticalSpace,
-                    Text(
-                      'سيتم ارسال رابط المنصة عبر بريدك الالكتروني',
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyLarge!
-                          .apply(color: kGreyColor),
-                    )
-                  ],
-                ),
-              );
+              return const CreateStoreBottomSheet();
             })).then((value) {
-          Navigator.of(context).pop();
+          Navigator.pop(context);
+          Navigator.pop(context);
         });
       } else {
         // ScaffoldMessenger.of(context).showSnackBar(
@@ -209,7 +175,7 @@ class _OtpVerificationViewState extends State<OtpVerificationView> {
     ).then((value) {
       isLoading = false;
       setState(() {});
-      if (value.length == 4) {
+      if (value == "تم إرسال رساله علي الجوال الخاص بك") {
         isLoading = false;
         canResend = false;
         final int endT = DateTime.now().millisecondsSinceEpoch + 1000 * 30;
@@ -219,16 +185,18 @@ class _OtpVerificationViewState extends State<OtpVerificationView> {
           onEnd: onEnd,
         );
         setState(() {});
-      } else {
-        // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        //     backgroundColor: Colors.red,
-        //     content: Text(
-        //       value.toString(),
-        //       style: Theme.of(context)
-        //           .textTheme
-        //           .bodySmall!
-        //           .apply(color: Colors.white),
-        //     )));
+
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            backgroundColor: value == "تم إرسال رساله علي الجوال الخاص بك"
+                ? kDarkColor
+                : Colors.red,
+            content: Text(
+              value.toString(),
+              style: Theme.of(context)
+                  .textTheme
+                  .bodySmall!
+                  .apply(color: Colors.white),
+            )));
       }
     });
   }

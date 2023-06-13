@@ -2,7 +2,6 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:linker/controllers/market_controller.dart';
 import 'package:linker/helpers/constants.dart';
@@ -14,7 +13,9 @@ import 'package:linker/ui/common/back_button_widget.dart';
 import 'package:linker/ui/common/large_button.dart';
 import 'package:provider/provider.dart';
 
+import '../../../controllers/global_contoller.dart';
 import '../../../helpers/messaging_provider.dart';
+import '../../common/loading_widget.dart';
 
 class CreateStoreView extends StatefulWidget {
   const CreateStoreView({super.key});
@@ -94,7 +95,7 @@ class _CreateStoreViewState extends State<CreateStoreView> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Container(
-                        height: 77,
+                        height: 77.h,
                         width: double.infinity,
                         padding: EdgeInsets.symmetric(horizontal: 23.h),
                         decoration: BoxDecoration(
@@ -134,10 +135,8 @@ class _CreateStoreViewState extends State<CreateStoreView> {
                                 children: [
                                   22.verticalSpace,
                                   TextFormField(
-                                    style: GoogleFonts.tajawal(
-                                        fontSize: 16.sp,
-                                        color: kTextColor,
-                                        fontWeight: FontWeight.normal),
+                                    style:
+                                        Theme.of(context).textTheme.titleMedium,
                                     controller: fullNameController,
                                     validator: (value) {
                                       if (value == null || value.isEmpty) {
@@ -157,10 +156,8 @@ class _CreateStoreViewState extends State<CreateStoreView> {
                                   ),
                                   20.verticalSpace,
                                   TextFormField(
-                                    style: GoogleFonts.tajawal(
-                                        fontSize: 16.sp,
-                                        color: kTextColor,
-                                        fontWeight: FontWeight.normal),
+                                    style:
+                                        Theme.of(context).textTheme.titleMedium,
                                     controller: storeNameController,
                                     validator: (value) {
                                       if (value == null || value.isEmpty) {
@@ -185,6 +182,7 @@ class _CreateStoreViewState extends State<CreateStoreView> {
                                       controller: phoneController,
                                       decoration: formFieldDecoration!,
                                       initialCountryCode: 'SA',
+                                      countries: const ["SA"],
                                       style: Theme.of(context)
                                           .textTheme
                                           .titleSmall,
@@ -232,10 +230,8 @@ class _CreateStoreViewState extends State<CreateStoreView> {
                                   ),
                                   20.verticalSpace,
                                   TextFormField(
-                                    style: GoogleFonts.tajawal(
-                                        fontSize: 16.sp,
-                                        color: kTextColor,
-                                        fontWeight: FontWeight.normal),
+                                    style:
+                                        Theme.of(context).textTheme.titleMedium,
                                     controller: emailController,
                                     validator: (value) {
                                       if (value == null || value.isEmpty) {
@@ -571,15 +567,57 @@ class _CreateStoreViewState extends State<CreateStoreView> {
                                         ),
                                       ),
                                       10.horizontalSpace,
-                                      Text(
-                                        'الموافقه علي الشروط والاحكام',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyLarge!
-                                            .apply(
-                                                decoration:
-                                                    TextDecoration.underline,
-                                                color: kTextColor),
+                                      GestureDetector(
+                                        onTap: () {
+                                          showDialog<bool>(
+                                            context: context,
+                                            builder: (BuildContext context) {
+                                              return AlertDialog(
+                                                  contentPadding:
+                                                      const EdgeInsets.all(10),
+                                                  content: Container(
+                                                    height: 600.h,
+                                                    width: 450.w,
+                                                    decoration: BoxDecoration(
+                                                        color: Colors.white,
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(
+                                                                    38.r)),
+                                                    child: FutureBuilder(
+                                                      future: GlobalController
+                                                          .getPage("policy"),
+                                                      builder:
+                                                          (BuildContext context,
+                                                              AsyncSnapshot
+                                                                  snapshot) {
+                                                        return snapshot.hasData
+                                                            ? SingleChildScrollView(
+                                                                child: Text(
+                                                                    snapshot
+                                                                        .data))
+                                                            : Center(
+                                                                child: LoadingWidget(
+                                                                    color:
+                                                                        kDarkColor,
+                                                                    size: 40.h),
+                                                              );
+                                                      },
+                                                    ),
+                                                  ));
+                                            },
+                                          );
+                                        },
+                                        child: Text(
+                                          'الموافقة على الشروط والأحكام',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyLarge!
+                                              .apply(
+                                                  decoration:
+                                                      TextDecoration.underline,
+                                                  color: kTextColor),
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -589,7 +627,10 @@ class _CreateStoreViewState extends State<CreateStoreView> {
                                       if (_formKey.currentState!.validate() &&
                                           _selectedCategories.isNotEmpty &&
                                           agreeOnTerms) {
-                                        Navigator.pushReplacement(
+                                        FocusManager.instance.primaryFocus
+                                            ?.unfocus();
+
+                                        Navigator.push(
                                           context,
                                           MaterialPageRoute(
                                             builder: (context) =>
@@ -598,7 +639,7 @@ class _CreateStoreViewState extends State<CreateStoreView> {
                                               email: emailController.text,
                                               fullStoreName:
                                                   fullNameController.text,
-                                              phone: phoneController.text,
+                                              phone: finalPhone,
                                               storeName:
                                                   storeNameController.text,
                                               storeSpecialty: isSeller

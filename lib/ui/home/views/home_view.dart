@@ -40,9 +40,8 @@ class _HomeViewState extends State<HomeView> {
   final List<PostModel> _posts = [];
   List<StroyModel> _stories = [];
   final focusNode = FocusNode();
-  bool isLoading = false;
-  bool isPostsLoading = false;
-  bool isSearching = false;
+  bool isLoading = true;
+  bool isPostsLoading = true;
   bool isPosts = true;
   Pagination postsPagination =
       Pagination(currentPage: 0, lastPage: 0, perPage: 0, total: 0);
@@ -68,7 +67,6 @@ class _HomeViewState extends State<HomeView> {
     debugPrint(
         Provider.of<MessagingProvider>(context, listen: false).deviceToken);
     setState(() {
-      isSearching = false;
       postsPagination.currentPage == 0
           ? isPostsLoading = true
           : paginateLoading = true;

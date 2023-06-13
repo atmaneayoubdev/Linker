@@ -10,7 +10,7 @@ class UserItemShimmer extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListView.separated(
       physics: const NeverScrollableScrollPhysics(),
-      padding: EdgeInsets.zero,
+      padding: EdgeInsets.symmetric(vertical: 10.h),
       shrinkWrap: true,
       scrollDirection: Axis.vertical,
       itemCount: 10,

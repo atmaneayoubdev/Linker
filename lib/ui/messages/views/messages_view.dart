@@ -206,6 +206,7 @@ class _MessagesViewState extends State<MessagesView> {
                 contoller: _controller,
                 isSending: isSending,
                 onSend: () async {
+                  FocusScope.of(context).unfocus();
                   if (_controller.text.isNotEmpty) {
                     setState(() {
                       isSending = true;

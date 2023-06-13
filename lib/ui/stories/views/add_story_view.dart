@@ -36,6 +36,7 @@ class _AddStoryViewState extends State<AddStoryView> {
   int _total = 0;
   int _count = 0;
   bool isPageLoading = true;
+  bool isError = false;
 
   Future getMySpecialties() async {
     await MyProfileController.getMySpecialties(
@@ -250,7 +251,7 @@ class _AddStoryViewState extends State<AddStoryView> {
                                       ),
                                       15.verticalSpace,
                                       SizedBox(
-                                        height: 300.h,
+                                        height: 400.h,
                                         width: double.infinity,
                                         child: Stack(
                                           children: [
@@ -276,9 +277,15 @@ class _AddStoryViewState extends State<AddStoryView> {
                                               validator: (value) {
                                                 if (value == null ||
                                                     value.isEmpty) {
+                                                  setState(() {
+                                                    isError = true;
+                                                  });
                                                   return "الرجاء كتابة القصة";
                                                 }
                                                 if (image == null) {
+                                                  setState(() {
+                                                    isError = true;
+                                                  });
                                                   return "الرجاء إختيار صورة";
                                                 }
                                                 return null;
@@ -286,7 +293,7 @@ class _AddStoryViewState extends State<AddStoryView> {
                                             ),
                                             if (image == null)
                                               Positioned(
-                                                bottom: 0.h,
+                                                bottom: isError ? 30.h : 0.h,
                                                 child: SizedBox(
                                                   height: 70.h,
                                                   width: 70.w,
@@ -342,7 +349,7 @@ class _AddStoryViewState extends State<AddStoryView> {
                                               ),
                                             if (image != null)
                                               Positioned(
-                                                bottom: 0.h,
+                                                bottom: isError ? 30.h : 0.h,
                                                 child: SizedBox(
                                                   height: 70.h,
                                                   width: 70.w,

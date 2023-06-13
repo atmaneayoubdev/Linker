@@ -70,7 +70,7 @@ class _SharedPostWidgetState extends State<SharedPostWidget> {
               showMenue: false,
               onDelete: () {},
               onEdit: () {},
-              userId: widget.post.id,
+              userId: widget.post.user.id,
               createdAt: widget.post.createdAt,
               image: widget.post.user.avatar,
               jobTitle: widget.post.user.job,

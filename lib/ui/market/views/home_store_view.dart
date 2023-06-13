@@ -103,228 +103,236 @@ class _HomeStoreViewState extends State<HomeStoreView> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          10.verticalSpace,
-          SizedBox(
-            height: 50.h,
-            width: double.infinity,
-            child: iscatLoading
-                ? const CategoryShimmer()
-                : ListView.separated(
-                    padding: EdgeInsets.symmetric(horizontal: 15.w),
-                    itemCount: _categories.length,
-                    shrinkWrap: true,
-                    scrollDirection: Axis.horizontal,
-                    separatorBuilder: (BuildContext context, int index) {
-                      return 10.horizontalSpace;
-                    },
-                    itemBuilder: (BuildContext context, int index) {
-                      MarketCategoryModel cat = _categories[index];
-                      return GestureDetector(
-                        onTap: () {
-                          if (_selectedCat != cat) {
-                            _selectedCat = cat;
-                            getBestRatedStores();
-                            getNewStores();
-                          }
-                          setState(() {});
-                        },
-                        child: MarketCategoryWidget(
-                          isSelected: _selectedCat == cat,
-                          name: cat.name,
-                        ),
-                      );
-                    },
-                  ),
-          ),
-          10.verticalSpace,
-          Padding(
-              padding: EdgeInsets.symmetric(horizontal: 15.w),
-              child: SizedBox(
-                height: 50.h,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 15.w),
-                        child: TextField(
+    return RefreshIndicator(
+      displacement: 0,
+      onRefresh: () async {
+        getCategories();
+        getBestRatedStores();
+        getNewStores();
+      },
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            10.verticalSpace,
+            SizedBox(
+              height: 50.h,
+              width: double.infinity,
+              child: iscatLoading
+                  ? const CategoryShimmer()
+                  : ListView.separated(
+                      padding: EdgeInsets.symmetric(horizontal: 15.w),
+                      itemCount: _categories.length,
+                      shrinkWrap: true,
+                      scrollDirection: Axis.horizontal,
+                      separatorBuilder: (BuildContext context, int index) {
+                        return 10.horizontalSpace;
+                      },
+                      itemBuilder: (BuildContext context, int index) {
+                        MarketCategoryModel cat = _categories[index];
+                        return GestureDetector(
                           onTap: () {
-                            FocusScope.of(context).unfocus();
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => const AllStoresView(
-                                          isSearching: true,
-                                        )));
+                            if (_selectedCat != cat) {
+                              _selectedCat = cat;
+                              getBestRatedStores();
+                              getNewStores();
+                            }
+                            setState(() {});
                           },
-                          enabled: true,
-                          showCursor: false,
-                          style: Theme.of(context).textTheme.bodySmall,
-                          controller: searchController,
-                          scrollPadding: EdgeInsets.zero,
-                          maxLines: 1,
-                          autofocus: false,
-                          decoration: formFieldDecoration!.copyWith(
-                            isDense: true,
-                            hintStyle: Theme.of(context).textTheme.bodySmall,
-                            hintText: 'ماذا تريد ان تبحث عن …',
-                            contentPadding: EdgeInsets.symmetric(
-                                horizontal: 15.w, vertical: 10.h),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(30.r),
-                              borderSide: const BorderSide(
-                                color: Color.fromRGBO(219, 219, 219, 1),
+                          child: MarketCategoryWidget(
+                            isSelected: _selectedCat == cat,
+                            name: cat.name,
+                          ),
+                        );
+                      },
+                    ),
+            ),
+            10.verticalSpace,
+            Padding(
+                padding: EdgeInsets.symmetric(horizontal: 15.w),
+                child: SizedBox(
+                  height: 50.h,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 15.w),
+                          child: TextField(
+                            onTap: () {
+                              FocusScope.of(context).unfocus();
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => const AllStoresView(
+                                            isSearching: true,
+                                          )));
+                            },
+                            enabled: true,
+                            showCursor: false,
+                            style: Theme.of(context).textTheme.bodySmall,
+                            controller: searchController,
+                            scrollPadding: EdgeInsets.zero,
+                            maxLines: 1,
+                            autofocus: false,
+                            decoration: formFieldDecoration!.copyWith(
+                              isDense: true,
+                              hintStyle: Theme.of(context).textTheme.bodySmall,
+                              hintText: 'ماذا تريد ان تبحث عن …',
+                              contentPadding: EdgeInsets.symmetric(
+                                  horizontal: 15.w, vertical: 10.h),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(30.r),
+                                borderSide: const BorderSide(
+                                  color: Color.fromRGBO(219, 219, 219, 1),
+                                ),
                               ),
-                            ),
-                            prefixIcon: SizedBox(
-                              height: 10.h,
-                              width: 15.w,
-                              child: Center(
-                                child: SvgPicture.asset(
-                                  'assets/icons/loop.svg',
-                                  fit: BoxFit.fill,
+                              prefixIcon: SizedBox(
+                                height: 10.h,
+                                width: 15.w,
+                                child: Center(
+                                  child: SvgPicture.asset(
+                                    'assets/icons/loop.svg',
+                                    fit: BoxFit.fill,
+                                  ),
                                 ),
                               ),
                             ),
                           ),
-                        ),
-                      ), //,
-                    ),
-                    5.horizontalSpace,
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const AllStoresView(
-                                      isSearching: false,
-                                    )));
-                      },
-                      child: Container(
-                        height: 50.h,
-                        width: 55.w,
-                        decoration: BoxDecoration(
-                          color: kOrangeColor,
-                          borderRadius: BorderRadius.circular(14.r),
-                        ),
-                        child: Center(
-                          child: SvgPicture.asset('assets/icons/filter.svg'),
-                        ),
+                        ), //,
                       ),
-                    ),
-                  ],
-                ),
-              )),
-          20.verticalSpace,
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 15.w),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Text(
-                  'الأفضل تقييما',
-                  style: Theme.of(context)
-                      .textTheme
-                      .titleSmall!
-                      .apply(color: kBleuColor),
-                ),
-              ],
-            ),
-          ),
-          SizedBox(
-            height: 290.h,
-            width: double.infinity,
-            child: isBestRatedStoresLoading
-                ? const StoreProductListShimmer(
-                    isFav: false,
-                    isVert: false,
-                  )
-                : _bestRatedStores.isEmpty
-                    ? SizedBox(
-                        height: 254.h,
-                        child: Center(
-                          child: Text(
-                            "لا توجد متاجر لعرضها",
-                            style: Theme.of(context).textTheme.bodyMedium,
+                      5.horizontalSpace,
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const AllStoresView(
+                                        isSearching: false,
+                                      )));
+                        },
+                        child: Container(
+                          height: 50.h,
+                          width: 55.w,
+                          decoration: BoxDecoration(
+                            color: kOrangeColor,
+                            borderRadius: BorderRadius.circular(14.r),
+                          ),
+                          child: Center(
+                            child: SvgPicture.asset('assets/icons/filter.svg'),
                           ),
                         ),
-                      )
-                    : ListView.separated(
-                        padding: EdgeInsets.symmetric(horizontal: 15.w),
-                        shrinkWrap: true,
-                        scrollDirection: Axis.horizontal,
-                        itemCount: _bestRatedStores.length,
-                        separatorBuilder: (BuildContext context, int index) {
-                          return 11.horizontalSpace;
-                        },
-                        itemBuilder: (BuildContext context, int index) {
-                          StoreModel store = _bestRatedStores[index];
-                          return MarketStoreItemWidget(
-                            canNavigat: true,
-                            isFav: false,
-                            store: store,
-                            from: "bestrated",
-                          );
-                        },
                       ),
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 15.w),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Text(
-                  'مضاف حديثا',
-                  style: Theme.of(context)
-                      .textTheme
-                      .titleSmall!
-                      .apply(color: kBleuColor),
-                ),
-              ],
+                    ],
+                  ),
+                )),
+            20.verticalSpace,
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 15.w),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text(
+                    'الأفضل تقييما',
+                    style: Theme.of(context)
+                        .textTheme
+                        .titleSmall!
+                        .apply(color: kBleuColor),
+                  ),
+                ],
+              ),
             ),
-          ),
-          SizedBox(
-            height: 290.h,
-            width: double.infinity,
-            child: isNewStoresLoading
-                ? const StoreProductListShimmer(
-                    isFav: false,
-                    isVert: false,
-                  )
-                : _newStores.isEmpty
-                    ? SizedBox(
-                        height: 254.h,
-                        child: Center(
-                          child: Text(
-                            "لا توجد متاجر لعرضها",
-                            style: Theme.of(context).textTheme.bodyMedium,
+            SizedBox(
+              height: 290.h,
+              width: double.infinity,
+              child: isBestRatedStoresLoading
+                  ? const StoreProductListShimmer(
+                      isFav: false,
+                      isVert: false,
+                    )
+                  : _bestRatedStores.isEmpty
+                      ? SizedBox(
+                          height: 254.h,
+                          child: Center(
+                            child: Text(
+                              "لا توجد متاجر لعرضها",
+                              style: Theme.of(context).textTheme.bodyMedium,
+                            ),
                           ),
+                        )
+                      : ListView.separated(
+                          padding: EdgeInsets.symmetric(horizontal: 15.w),
+                          shrinkWrap: true,
+                          scrollDirection: Axis.horizontal,
+                          itemCount: _bestRatedStores.length,
+                          separatorBuilder: (BuildContext context, int index) {
+                            return 11.horizontalSpace;
+                          },
+                          itemBuilder: (BuildContext context, int index) {
+                            StoreModel store = _bestRatedStores[index];
+                            return MarketStoreItemWidget(
+                              canNavigat: true,
+                              isFav: false,
+                              store: store,
+                              from: "bestrated",
+                            );
+                          },
                         ),
-                      )
-                    : ListView.separated(
-                        padding: EdgeInsets.symmetric(horizontal: 15.w),
-                        shrinkWrap: true,
-                        scrollDirection: Axis.horizontal,
-                        itemCount: _newStores.length,
-                        separatorBuilder: (BuildContext context, int index) {
-                          return 11.horizontalSpace;
-                        },
-                        itemBuilder: (BuildContext context, int index) {
-                          StoreModel store = _newStores[index];
-                          return MarketStoreItemWidget(
-                            canNavigat: true,
-                            isFav: false,
-                            store: store,
-                            from: "store",
-                          );
-                        },
-                      ),
-          ),
-        ],
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 15.w),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text(
+                    'مضاف حديثا',
+                    style: Theme.of(context)
+                        .textTheme
+                        .titleSmall!
+                        .apply(color: kBleuColor),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(
+              height: 290.h,
+              width: double.infinity,
+              child: isNewStoresLoading
+                  ? const StoreProductListShimmer(
+                      isFav: false,
+                      isVert: false,
+                    )
+                  : _newStores.isEmpty
+                      ? SizedBox(
+                          height: 254.h,
+                          child: Center(
+                            child: Text(
+                              "لا توجد متاجر لعرضها",
+                              style: Theme.of(context).textTheme.bodyMedium,
+                            ),
+                          ),
+                        )
+                      : ListView.separated(
+                          padding: EdgeInsets.symmetric(horizontal: 15.w),
+                          shrinkWrap: true,
+                          scrollDirection: Axis.horizontal,
+                          itemCount: _newStores.length,
+                          separatorBuilder: (BuildContext context, int index) {
+                            return 11.horizontalSpace;
+                          },
+                          itemBuilder: (BuildContext context, int index) {
+                            StoreModel store = _newStores[index];
+                            return MarketStoreItemWidget(
+                              canNavigat: true,
+                              isFav: false,
+                              store: store,
+                              from: "store",
+                            );
+                          },
+                        ),
+            ),
+          ],
+        ),
       ),
     );
   }
