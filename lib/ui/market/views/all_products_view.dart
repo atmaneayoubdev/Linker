@@ -235,7 +235,7 @@ class _AllProductsViewState extends State<AllProductsView> {
                             height: 100.h,
                             child: Center(
                               child: Text(
-                                "لا توجد منتجات",
+                                "لا توجد منتجات للعرض",
                                 style: Theme.of(context).textTheme.bodyLarge,
                               ),
                             ),

@@ -8,9 +8,11 @@ class FieldsHeaderWidget extends StatelessWidget {
   const FieldsHeaderWidget({
     Key? key,
     required this.index,
+    required this.page,
   }) : super(key: key);
 
   final int index;
+  final int page;
 
   @override
   Widget build(BuildContext context) {
@@ -27,18 +29,20 @@ class FieldsHeaderWidget extends StatelessWidget {
                 Container(
                   height: 25.h,
                   width: 1.h,
-                  color: index == 1 ? kBleuColor : kOrangeColor,
+                  color: page == 1 ? kBleuColor : kOrangeColor,
                 ),
                 7.horizontalSpace,
                 SizedBox(
                   width: 300.w,
                   child: Text(
-                    index == 1
+                    page == 1
                         ? 'مدارات بمجال تخصصك المهني أو نشاطك التجاري'
                         : 'مدارات بمجال إهتمامك',
                     maxLines: 1,
-                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                        color: index == 1 ? kBleuColor : kOrangeColor),
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyMedium!
+                        .copyWith(color: page == 1 ? kBleuColor : kOrangeColor),
                   ),
                 )
               ],
@@ -66,7 +70,7 @@ class FieldsHeaderWidget extends StatelessWidget {
             child: CircularPercentIndicator(
               radius: 25.h,
               lineWidth: 1.h,
-              percent: index == 1 ? 0.5 : 1,
+              percent: (index * 1) / 3,
               animation: true,
               addAutomaticKeepAlive: true,
               animateFromLastPercent: true,
@@ -77,10 +81,10 @@ class FieldsHeaderWidget extends StatelessWidget {
                   style: Theme.of(context)
                       .textTheme
                       .bodySmall!
-                      .apply(color: index == 1 ? kBleuColor : kOrangeColor),
+                      .apply(color: page == 1 ? kBleuColor : kOrangeColor),
                 ),
               ),
-              progressColor: index == 1 ? kBleuColor : kOrangeColor,
+              progressColor: page == 1 ? kBleuColor : kOrangeColor,
             ),
           ),
         )

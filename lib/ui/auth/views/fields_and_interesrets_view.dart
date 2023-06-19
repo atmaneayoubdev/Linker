@@ -209,7 +209,12 @@ class _FieldsAndInterestViewState extends State<FieldsAndInterestView> {
                     children: [
                       Column(
                         children: [
-                          FieldsHeaderWidget(index: index),
+                          FieldsHeaderWidget(
+                            index: index == 1
+                                ? _selectedSpecialies.length
+                                : _selectedInterests.length,
+                            page: index,
+                          ),
                           22.verticalSpace,
                           index == 1
                               ? Expanded(

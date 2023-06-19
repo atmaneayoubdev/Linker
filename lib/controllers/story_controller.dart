@@ -6,14 +6,16 @@ import 'package:flutter/material.dart';
 import 'package:linker/models/general/story_model.dart';
 
 import '../helpers/constants.dart';
+import '../models/general/pagination.dart';
 import '../models/general/specialty_model.dart';
 
 class StoryController with ChangeNotifier {
   ////////////////////Get All Stroeis List//////////////////////
-  static Future<List<StroyModel>> getAllStories({
+  static Future getAllStories({
     required String token,
     String? specialtyId,
     required String deviceToken,
+    required int page,
   }) async {
     try {
       Map<String, String> headers = {
@@ -24,15 +26,17 @@ class StoryController with ChangeNotifier {
       Dio dio = Dio();
 
       var response = await dio.get(
-        specialtyId == null
-            ? "${baseUrl}stories/all?orderByLikes"
-            : "${baseUrl}stories/all?orderByLikes&specialty_id=$specialtyId",
-        options: Options(
-          followRedirects: false,
-          validateStatus: (status) => true,
-          headers: headers,
-        ),
-      );
+          specialtyId == null
+              ? "${baseUrl}stories/all?orderByLikes"
+              : "${baseUrl}stories/all?orderByLikes&specialty_id=$specialtyId",
+          options: Options(
+            followRedirects: false,
+            validateStatus: (status) => true,
+            headers: headers,
+          ),
+          queryParameters: {
+            "page": page,
+          });
       debugPrint(response.data.toString());
 
       if (response.statusCode == 200) {
@@ -41,11 +45,17 @@ class StoryController with ChangeNotifier {
             .map((x) => StroyModel.fromJson(x))
             .toList();
 
-        return stories;
+        return {
+          "stories": stories,
+          "pagination": Pagination.fromJson(response.data["paginate"]),
+        };
       }
-      return [];
-    } on DioError {
-      return [];
+      return {
+        "stories": [],
+        "pagination": Pagination.fromJson(response.data["paginate"]),
+      };
+    } on DioError catch (error) {
+      return error.message;
     }
   }
 
@@ -188,16 +198,24 @@ class StoryController with ChangeNotifier {
   static Future createStory({
     required String token,
     required String description,
-    required File image,
+    required List<File> images,
     required int speciatltyId,
     required String deviceToken,
   }) async {
     try {
       Dio dio = Dio();
-      String fileName = image.path.split('/').last;
+      List<MultipartFile> multipartImageList = [];
+
+      for (File file in images) {
+        MultipartFile multipartFile = await MultipartFile.fromFile(
+          file.path,
+          filename: file.path.split('/').last,
+        );
+        multipartImageList.add(multipartFile);
+      }
 
       FormData formData = FormData.fromMap({
-        "image": await MultipartFile.fromFile(image.path, filename: fileName),
+        "images[]": multipartImageList,
         "description": description,
         "specialty_id": speciatltyId,
       });
@@ -214,7 +232,7 @@ class StoryController with ChangeNotifier {
         ),
         data: formData,
       );
-      log(response.data.toString());
+      debugPrint(response.data.toString());
 
       if (response.statusCode == 200) {
         return response.data['message'];

@@ -31,33 +31,9 @@ class _StoriesPageViewState extends State<StoriesPageView> {
 
   @override
   void dispose() {
-    //timer.cancel();
     _controller.dispose();
     super.dispose();
   }
-
-  // void _startTimer() {
-  //   timer = Timer.periodic(const Duration(seconds: 10), (Timer timer) {
-  //     if (_controller.page == widget.stories.length - 1) {
-  //       timer.cancel();
-  //       Navigator.pop(context, hasChanged);
-  //     } else {
-  //       _controller.nextPage(
-  //         duration: const Duration(milliseconds: 500),
-  //         curve: Curves.easeInOut,
-  //       );
-  //     }
-  //   });
-  // }
-
-  // void _onPageChanged(int pageIndex) {
-  //   resetTimer();
-  // }
-
-  // void resetTimer() {
-  //   timer.cancel();
-  //   _startTimer();
-  // }
 
   @override
   Widget build(BuildContext context) {

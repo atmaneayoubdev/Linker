@@ -99,81 +99,119 @@ class _FavoriteViewState extends State<FavoriteView> {
       backgroundColor: Colors.white,
       body: Container(
         decoration: const BoxDecoration(),
-        child: RefreshIndicator(
-          displacement: 0,
-          onRefresh: () async {
-            getNotificationsCount();
-
-            getFavoriteProducts();
-            getFavoriteStores();
-          },
-          color: kDarkColor,
-          child: SingleChildScrollView(
-            physics: const AlwaysScrollableScrollPhysics(),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                //18.verticalSpace,
-                FavoriteTabView(
-                  isStore: isStore,
-                  setStore: setStore,
-                  setProduct: setProduct,
+        child: LayoutBuilder(
+          builder: (BuildContext context, BoxConstraints constraints) {
+            return RefreshIndicator(
+              displacement: 0,
+              onRefresh: () async {
+                getNotificationsCount();
+                getFavoriteProducts();
+                getFavoriteStores();
+              },
+              color: kDarkColor,
+              child: ConstrainedBox(
+                constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                child: SingleChildScrollView(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      //18.verticalSpace,
+                      FavoriteTabView(
+                        isStore: isStore,
+                        setStore: setStore,
+                        setProduct: setProduct,
+                      ),
+                      11.verticalSpace,
+                      if (isStore)
+                        isStoresLoading
+                            ? const StoreProductListShimmer(
+                                isFav: true,
+                                isVert: true,
+                              )
+                            : _stores.isEmpty
+                                ? SizedBox(
+                                    height: 600.h,
+                                    child: Center(
+                                      child: Text(
+                                        "لا توجد متاجر لعرضها",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyLarge,
+                                      ),
+                                    ),
+                                  )
+                                : ListView.separated(
+                                    physics:
+                                        const NeverScrollableScrollPhysics(),
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 15.w),
+                                    shrinkWrap: true,
+                                    scrollDirection: Axis.vertical,
+                                    itemCount: _stores.length,
+                                    separatorBuilder:
+                                        (BuildContext context, int index) {
+                                      return 11.verticalSpace;
+                                    },
+                                    itemBuilder:
+                                        (BuildContext context, int index) {
+                                      StoreModel store = _stores[index];
+                                      return MarketStoreItemWidget(
+                                        canNavigat: true,
+                                        isFav: true,
+                                        store: store,
+                                        from: 'favorite',
+                                      );
+                                    },
+                                  ),
+                      if (!isStore)
+                        isStoresLoading
+                            ? const StoreProductListShimmer(
+                                isFav: true,
+                                isVert: true,
+                              )
+                            : _products.isEmpty
+                                ? SizedBox(
+                                    height: 600.h,
+                                    child: Center(
+                                      child: Text(
+                                        "لا توجد منتجات للعرض",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyLarge,
+                                      ),
+                                    ),
+                                  )
+                                : ListView.separated(
+                                    physics:
+                                        const NeverScrollableScrollPhysics(),
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 15.w),
+                                    shrinkWrap: true,
+                                    scrollDirection: Axis.vertical,
+                                    itemCount: _products.length,
+                                    separatorBuilder:
+                                        (BuildContext context, int index) {
+                                      return 11.verticalSpace;
+                                    },
+                                    itemBuilder:
+                                        (BuildContext context, int index) {
+                                      ProductModel product = _products[index];
+                                      return MarketProductItemWidget(
+                                        canNavigat: true,
+                                        isFav: true,
+                                        product: product,
+                                        from: "FavoriteProduct",
+                                      );
+                                    },
+                                  ),
+                    ],
+                  ),
                 ),
-                11.verticalSpace,
-                if (isStore)
-                  isStoresLoading
-                      ? const StoreProductListShimmer(
-                          isFav: true,
-                          isVert: true,
-                        )
-                      : ListView.separated(
-                          physics: const NeverScrollableScrollPhysics(),
-                          padding: EdgeInsets.symmetric(horizontal: 15.w),
-                          shrinkWrap: true,
-                          scrollDirection: Axis.vertical,
-                          itemCount: _stores.length,
-                          separatorBuilder: (BuildContext context, int index) {
-                            return 11.verticalSpace;
-                          },
-                          itemBuilder: (BuildContext context, int index) {
-                            StoreModel store = _stores[index];
-                            return MarketStoreItemWidget(
-                              canNavigat: true,
-                              isFav: true,
-                              store: store,
-                              from: 'favorite',
-                            );
-                          },
-                        ),
-                if (!isStore)
-                  isStoresLoading
-                      ? const StoreProductListShimmer(
-                          isFav: true,
-                          isVert: true,
-                        )
-                      : ListView.separated(
-                          physics: const NeverScrollableScrollPhysics(),
-                          padding: EdgeInsets.symmetric(horizontal: 15.w),
-                          shrinkWrap: true,
-                          scrollDirection: Axis.vertical,
-                          itemCount: _products.length,
-                          separatorBuilder: (BuildContext context, int index) {
-                            return 11.verticalSpace;
-                          },
-                          itemBuilder: (BuildContext context, int index) {
-                            ProductModel product = _products[index];
-                            return MarketProductItemWidget(
-                              canNavigat: true,
-                              isFav: true,
-                              product: product,
-                              from: "FavoriteProduct",
-                            );
-                          },
-                        ),
-              ],
-            ),
-          ),
+              ),
+            );
+          },
         ),
       ),
     );

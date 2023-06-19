@@ -64,8 +64,6 @@ class _HomeViewState extends State<HomeView> {
   }
 
   Future getPostsList() async {
-    debugPrint(
-        Provider.of<MessagingProvider>(context, listen: false).deviceToken);
     setState(() {
       postsPagination.currentPage == 0
           ? isPostsLoading = true

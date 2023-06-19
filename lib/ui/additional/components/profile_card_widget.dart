@@ -135,7 +135,8 @@ class _ProfileCardWidgetState extends State<ProfileCardWidget> {
                                 )));
                   }
                 },
-                child: SizedBox(
+                child: Container(
+                  color: klighSkyBleu,
                   height: 64.h,
                   width: 80.w,
                   child: Column(
@@ -180,7 +181,8 @@ class _ProfileCardWidgetState extends State<ProfileCardWidget> {
                     );
                   }
                 },
-                child: SizedBox(
+                child: Container(
+                  color: klighSkyBleu,
                   height: 64.h,
                   width: 80.w,
                   child: Column(
@@ -240,15 +242,6 @@ class _ProfileCardWidgetState extends State<ProfileCardWidget> {
                             : setState(() {
                                 isFollowing = false;
                               });
-                        // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                        //     backgroundColor: kDarkColor,
-                        //     content: Text(
-                        //       value.toString(),
-                        //       style: Theme.of(context)
-                        //           .textTheme
-                        //           .bodySmall!
-                        //           .apply(color: Colors.white),
-                        //     )));
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                             backgroundColor: Colors.red,

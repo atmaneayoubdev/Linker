@@ -31,19 +31,15 @@ class ShowStoryView extends StatefulWidget {
 }
 
 class _ShowStoryViewState extends State<ShowStoryView> {
-  //double width = 0;
   bool isStoryLiked = false;
   bool hasChanged = false;
   bool isDialogOpen = false;
   bool canShow = true;
   int likesNbr = 0;
+  int currentImgIndex = 0;
 
   @override
   void initState() {
-    // Future.delayed(Duration.zero, () {
-    //   width = 395.w;
-    //   setState(() {});
-    // });
     isStoryLiked = widget.story.isLiked == "true";
     likesNbr = int.parse(widget.story.likes);
     super.initState();
@@ -64,28 +60,15 @@ class _ShowStoryViewState extends State<ShowStoryView> {
         },
         child: Stack(
           children: [
-            // Blur(
-            //   alignment: Alignment.center,
-            //   blur: 10,
-            //   blurColor: Colors.transparent,
-            //   colorOpacity: 0.1,
-            //   child: CachedNetworkImage(
-            //     height: MediaQuery.of(context).size.height,
-            //     imageUrl: widget.story.image,
-            //     fit: BoxFit.cover,
-            //     placeholder: (context, url) => const Center(
-            //       child: SizedBox(),
-            //     ),
-            //     errorWidget: (context, url, error) => const SizedBox(),
-            //   ),
-            // ),
             SizedBox.expand(
               child: InteractiveViewer(
                 child: CachedNetworkImage(
-                  imageUrl: widget.story.image,
+                  imageUrl: widget.story.images[currentImgIndex].image,
                   fit: BoxFit.contain,
                   placeholder: (context, url) => const Center(
-                    child: SizedBox(),
+                    child: CircularProgressIndicator(
+                      color: Colors.white,
+                    ),
                   ),
                   errorWidget: (context, url, error) => const SizedBox(),
                 ),
@@ -105,6 +88,40 @@ class _ShowStoryViewState extends State<ShowStoryView> {
                 ),
               ),
             ),
+            SizedBox(
+              width: MediaQuery.of(context).size.width,
+              child: Row(
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      if (currentImgIndex != 0) {
+                        setState(() {
+                          currentImgIndex--;
+                        });
+                      }
+                    },
+                    child: Container(
+                      width: MediaQuery.of(context).size.width / 2,
+                      color: Colors.transparent,
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      if (currentImgIndex <
+                          int.parse(widget.story.imageCount)) {
+                        setState(() {
+                          currentImgIndex++;
+                        });
+                      }
+                    },
+                    child: Container(
+                      width: MediaQuery.of(context).size.width / 2,
+                      color: Colors.transparent,
+                    ),
+                  )
+                ],
+              ),
+            ),
             Visibility(
               visible: widget.canShow,
               child: Padding(
@@ -114,6 +131,7 @@ class _ShowStoryViewState extends State<ShowStoryView> {
                   children: [
                     SizedBox(
                       height: 40.h,
+                      //width: double.infinity,
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -125,6 +143,37 @@ class _ShowStoryViewState extends State<ShowStoryView> {
                             child: SvgPicture.asset(
                               'assets/icons/back_button.svg',
                               height: 45.h,
+                            ),
+                          ),
+                          Expanded(
+                            child: Center(
+                              child: ListView.separated(
+                                shrinkWrap: true,
+                                physics: const NeverScrollableScrollPhysics(),
+                                padding: EdgeInsets.zero,
+                                scrollDirection: Axis.horizontal,
+                                itemBuilder: (BuildContext context, int index) {
+                                  return Center(
+                                    child: Container(
+                                      height: currentImgIndex == index
+                                          ? 15.h
+                                          : 10.h,
+                                      width: currentImgIndex == index
+                                          ? 15.w
+                                          : 10.w,
+                                      decoration: const BoxDecoration(
+                                        color: Colors.white,
+                                        shape: BoxShape.circle,
+                                      ),
+                                    ),
+                                  );
+                                },
+                                separatorBuilder:
+                                    (BuildContext context, int index) {
+                                  return 3.horizontalSpace;
+                                },
+                                itemCount: widget.story.images.length,
+                              ),
                             ),
                           ),
                           Text(
@@ -170,7 +219,9 @@ class _ShowStoryViewState extends State<ShowStoryView> {
                                   decoration: BoxDecoration(
                                     shape: BoxShape.circle,
                                     border: Border.all(
-                                        color: kLightBlackColor, width: 2),
+                                      color: kLightBlackColor,
+                                      width: 2,
+                                    ),
                                   ),
                                   child: ClipRRect(
                                     borderRadius: BorderRadius.circular(100),
@@ -413,33 +464,6 @@ class _ShowStoryViewState extends State<ShowStoryView> {
                           .apply(color: Colors.white)
                           .copyWith(height: 2),
                     ),
-                    //10.verticalSpace,
-                    // SafeArea(
-                    //   child: SizedBox(
-                    //     width: 395.w,
-                    //     height: 5.h,
-                    //     child: Stack(children: [
-                    //       Container(
-                    //         width: double.infinity,
-                    //         height: 5.h,
-                    //         decoration: BoxDecoration(
-                    //           borderRadius: BorderRadius.circular(10.r),
-                    //           color: Colors.white54,
-                    //         ),
-                    //       ),
-                    //       AnimatedContainer(
-                    //         decoration: BoxDecoration(
-                    //           borderRadius: BorderRadius.circular(10.r),
-                    //           color: Colors.white,
-                    //         ),
-                    //         duration: const Duration(seconds: 10),
-                    //         width: width,
-                    //         height: 5.h,
-                    //         onEnd: () {},
-                    //       ),
-                    //     ]),
-                    //   ),
-                    // ),
                   ],
                 ),
               ),

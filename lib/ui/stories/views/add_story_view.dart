@@ -1,17 +1,17 @@
-import 'dart:developer';
 import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:linker/controllers/story_controller.dart';
 import 'package:linker/helpers/constants.dart';
 import 'package:linker/helpers/user_provider.dart';
 import 'package:linker/ui/common/large_button.dart';
 import 'package:linker/ui/common/loading_widget.dart';
+import 'package:linker/ui/stories/components/add_list_item.dart';
 import 'package:provider/provider.dart';
-import '../../../controllers/my_profile_controller.dart';
+import '../../../controllers/global_contoller.dart';
 import '../../../helpers/messaging_provider.dart';
 import '../../../models/general/specialty_model.dart';
 import '../../common/back_button_widget.dart';
@@ -27,108 +27,33 @@ class _AddStoryViewState extends State<AddStoryView> {
   TextEditingController controller = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
-  File? image;
+  List<File> images = [];
   final ImagePicker _picker = ImagePicker();
   String currentToken = '';
   List<SpecialtyModel> _specialties = [];
   SpecialtyModel? _selectedSpecialty;
   bool isLoading = false;
-  int _total = 0;
-  int _count = 0;
+
   bool isPageLoading = true;
   bool isError = false;
 
-  Future getMySpecialties() async {
-    await MyProfileController.getMySpecialties(
-            deviceToken: Provider.of<MessagingProvider>(context, listen: false)
-                .deviceToken,
-            token: currentToken,
-            notInt: true)
-        .then((value) {
-      setState(() {
-        _specialties.addAll(value);
-      });
-    });
-  }
-
-  Future getMyInterests() async {
-    await MyProfileController.getMyInterests(
-      token: currentToken,
-      notInt: true,
-      deviceToken:
-          Provider.of<MessagingProvider>(context, listen: false).deviceToken,
-    ).then((value) {
-      _specialties.addAll(value);
-      List<SpecialtyModel> temp = [
-        ...{..._specialties}
-      ];
-      _specialties.clear();
-      _specialties = temp;
-      setState(() {});
-      setState(() {
-        isPageLoading = false;
-      });
-    });
-  }
-
-  Future createStory({
-    required String token,
-    required String description,
-    required File image,
-    required int speciatltyId,
-  }) async {
-    try {
-      Dio dio = Dio();
-      String fileName = image.path.split('/').last;
-
-      FormData formData = FormData.fromMap({
-        "image": await MultipartFile.fromFile(image.path, filename: fileName),
-        "description": description,
-        "specialty_id": speciatltyId,
-      });
-      var response = await dio.post(
-        "${baseUrl}stories",
-        options: Options(
-          followRedirects: false,
-          validateStatus: (status) => true,
-          headers: {
-            'Devices_Token':
-                // ignore: use_build_context_synchronously
-                Provider.of<MessagingProvider>(context, listen: false)
-                    .deviceToken,
-            'Accept': 'application/json',
-            'Authorization': "Bearer $token",
-          },
-        ),
-        onSendProgress: (sent, total) {
-          log("$_count + $_total");
-          setState(() {
-            _total = total;
-            _count = sent;
-          });
-        },
-        data: formData,
-      );
-
-      if (response.statusCode == 200) {
-        return response.data['message'];
+  Future getSpecialties() async {
+    await GlobalController.getSpecialies().then((value) {
+      if (mounted) {
+        setState(() {
+          value.removeAt(0);
+          _specialties = value;
+          isPageLoading = false;
+        });
       }
-      if (response.statusCode == 400) {
-        return response.data['message'].toString();
-      }
-    } on DioError catch (error) {
-      log(error.toString());
-      return error.message;
-    }
+    });
   }
 
   @override
   void initState() {
     currentToken =
         Provider.of<UserProvider>(context, listen: false).user.apiToken;
-    getMySpecialties().then((value) {
-      getMyInterests();
-    });
+    getSpecialties();
 
     super.initState();
   }
@@ -252,10 +177,13 @@ class _AddStoryViewState extends State<AddStoryView> {
                                       15.verticalSpace,
                                       SizedBox(
                                         height: 400.h,
-                                        width: double.infinity,
+                                        width: 400.w,
                                         child: Stack(
                                           children: [
                                             TextFormField(
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .titleMedium!,
                                               controller: controller,
                                               expands: true,
                                               maxLines: null,
@@ -269,7 +197,7 @@ class _AddStoryViewState extends State<AddStoryView> {
                                                 hintText: 'ماذا تريد أن تدون',
                                                 hintStyle: Theme.of(context)
                                                     .textTheme
-                                                    .bodyLarge!
+                                                    .titleMedium!
                                                     .apply(
                                                       color: kGreyColor,
                                                     ),
@@ -282,7 +210,7 @@ class _AddStoryViewState extends State<AddStoryView> {
                                                   });
                                                   return "الرجاء كتابة القصة";
                                                 }
-                                                if (image == null) {
+                                                if (images.isEmpty) {
                                                   setState(() {
                                                     isError = true;
                                                   });
@@ -291,7 +219,7 @@ class _AddStoryViewState extends State<AddStoryView> {
                                                 return null;
                                               },
                                             ),
-                                            if (image == null)
+                                            if (images.isEmpty)
                                               Positioned(
                                                 bottom: isError ? 30.h : 0.h,
                                                 child: SizedBox(
@@ -300,15 +228,15 @@ class _AddStoryViewState extends State<AddStoryView> {
                                                   child: GestureDetector(
                                                     onTap: () async {
                                                       await _picker
-                                                          .pickImage(
-                                                        source:
-                                                            ImageSource.gallery,
-                                                      )
+                                                          .pickMultiImage()
                                                           .then((value) {
-                                                        if (value != null) {
+                                                        if (value.isNotEmpty) {
                                                           setState(() {
-                                                            image = File(
-                                                                value.path);
+                                                            for (XFile x
+                                                                in value) {
+                                                              images.add(
+                                                                  File(x.path));
+                                                            }
                                                           });
                                                         }
                                                       });
@@ -347,75 +275,35 @@ class _AddStoryViewState extends State<AddStoryView> {
                                                   ),
                                                 ),
                                               ),
-                                            if (image != null)
+                                            if (images.isNotEmpty)
                                               Positioned(
                                                 bottom: isError ? 30.h : 0.h,
                                                 child: SizedBox(
                                                   height: 70.h,
-                                                  width: 70.w,
-                                                  child: Stack(
-                                                    children: [
-                                                      Center(
-                                                        child: Container(
-                                                          height: 45.h,
-                                                          width: 45.w,
-                                                          decoration:
-                                                              const BoxDecoration(
-                                                                  shape: BoxShape
-                                                                      .circle),
-                                                          child: ClipRRect(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        300),
-                                                            child: Image.file(
-                                                              image!,
-                                                              fit: BoxFit.cover,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                      Align(
-                                                        alignment:
-                                                            Alignment.topLeft,
-                                                        child: GestureDetector(
-                                                          onTap: () {
-                                                            image = null;
+                                                  width: 395.w,
+                                                  child: ListView.separated(
+                                                    itemCount: images.length,
+                                                    shrinkWrap: true,
+                                                    padding: EdgeInsets.only(
+                                                        left: 20.w),
+                                                    scrollDirection:
+                                                        Axis.horizontal,
+                                                    itemBuilder:
+                                                        (BuildContext context,
+                                                            int index) {
+                                                      return AddStoryListItem(
+                                                          deleteImg: () {
+                                                            images.removeAt(
+                                                                index);
                                                             setState(() {});
                                                           },
-                                                          child: Container(
-                                                            decoration:
-                                                                const BoxDecoration(
-                                                                    shape: BoxShape
-                                                                        .circle,
-                                                                    boxShadow: [
-                                                                  BoxShadow(
-                                                                    offset:
-                                                                        Offset(
-                                                                            0,
-                                                                            0.5),
-                                                                    color: Color
-                                                                        .fromARGB(
-                                                                            21,
-                                                                            0,
-                                                                            0,
-                                                                            0),
-                                                                    blurRadius:
-                                                                        1,
-                                                                    spreadRadius:
-                                                                        1,
-                                                                  )
-                                                                ]),
-                                                            child: SvgPicture
-                                                                .asset(
-                                                              'assets/icons/cancel.svg',
-                                                              height: 25.h,
-                                                              width: 25.w,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ],
+                                                          image: images[index]);
+                                                    },
+                                                    separatorBuilder:
+                                                        (BuildContext context,
+                                                            int index) {
+                                                      return 3.horizontalSpace;
+                                                    },
                                                   ),
                                                 ),
                                               )
@@ -493,20 +381,25 @@ class _AddStoryViewState extends State<AddStoryView> {
                                         onTap: () async {
                                           if (_formKey.currentState!
                                                   .validate() &&
-                                              image != null) {
+                                              images.isNotEmpty) {
                                             setState(() {
                                               isLoading = true;
                                             });
-                                            await createStory(
+                                            await StoryController.createStory(
                                               token: Provider.of<UserProvider>(
                                                       context,
                                                       listen: false)
                                                   .user
                                                   .apiToken,
                                               description: controller.text,
-                                              image: image!,
+                                              images: images,
                                               speciatltyId: int.parse(
                                                   _selectedSpecialty!.id),
+                                              deviceToken: Provider.of<
+                                                          MessagingProvider>(
+                                                      context,
+                                                      listen: false)
+                                                  .deviceToken,
                                             ).then((value) {
                                               setState(() {
                                                 isLoading = false;
@@ -524,8 +417,8 @@ class _AddStoryViewState extends State<AddStoryView> {
                                                           .textTheme
                                                           .bodySmall!
                                                           .apply(
-                                                              color:
-                                                                  Colors.white),
+                                                            color: Colors.white,
+                                                          ),
                                                     ),
                                                   ),
                                                 );
@@ -561,34 +454,6 @@ class _AddStoryViewState extends State<AddStoryView> {
                                               ),
                                       ),
                                       50.verticalSpace,
-                                      //if (_count != 0)
-                                      // SizedBox(
-                                      //   height: 10,
-                                      //   width: 300,
-                                      //   child: Stack(
-                                      //     children: [
-                                      //       Container(
-                                      //         height: 10,
-                                      //         width: 400.h,
-                                      //         decoration: BoxDecoration(
-                                      //             color: kLightGreyColor,
-                                      //             borderRadius:
-                                      //                 BorderRadius.circular(11)),
-                                      //       ),
-                                      //       AnimatedContainer(
-                                      //         decoration: BoxDecoration(
-                                      //             color: kDarkColor,
-                                      //             borderRadius:
-                                      //                 BorderRadius.circular(11)),
-                                      //         duration:
-                                      //             const Duration(milliseconds: 50),
-                                      //         height: 10,
-                                      //         width:
-                                      //             _count.toDouble() * 400.h / _total,
-                                      //       ),
-                                      //     ],
-                                      //   ),
-                                      // ),
                                     ],
                                   ),
                                 ),

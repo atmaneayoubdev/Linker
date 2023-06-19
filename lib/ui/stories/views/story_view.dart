@@ -14,6 +14,7 @@ import '../../../controllers/global_contoller.dart';
 import '../../../controllers/story_controller.dart';
 import '../../../helpers/messaging_provider.dart';
 import '../../../helpers/user_provider.dart';
+import '../../../models/general/pagination.dart';
 import '../../home/views/stories_page_view.dart';
 import '../components/story_category_widget.dart';
 
@@ -33,6 +34,19 @@ class _StoryViewState extends State<StoryView> {
   SpecialtyModel allSpecialties =
       SpecialtyModel(name: 'الكل', id: '', image: '', description: '');
   bool isCatLoading = false;
+  Pagination storyPagination =
+      Pagination(currentPage: 0, lastPage: 0, perPage: 0, total: 0);
+  bool paginateLoading = false;
+  late ScrollController _controller;
+
+  void _scrollListener() {
+    if (_controller.offset >= _controller.position.maxScrollExtent * 1.00 &&
+        !_controller.position.outOfRange) {
+      if (storyPagination.currentPage != storyPagination.lastPage) {
+        getStories(_selectedSpecialty!.id, false);
+      }
+    }
+  }
 
   Future getSpecialties() async {
     setState(() {
@@ -61,29 +75,49 @@ class _StoryViewState extends State<StoryView> {
     });
   }
 
-  Future getStories(String? specialtyId) async {
+  Future getStories(String? specialtyId, bool isRefresh) async {
+    if (isRefresh) {
+      storyPagination =
+          Pagination(currentPage: 0, lastPage: 0, perPage: 0, total: 0);
+    }
     setState(() {
-      isLoading = true;
+      storyPagination.currentPage == 0
+          ? isLoading = true
+          : paginateLoading = true;
     });
     await StoryController.getAllStories(
       deviceToken:
           Provider.of<MessagingProvider>(context, listen: false).deviceToken,
       token: Provider.of<UserProvider>(context, listen: false).user.apiToken,
       specialtyId: specialtyId,
+      page: storyPagination.currentPage + 1,
     ).then((value) {
       setState(() {
-        _stories = value;
+        storyPagination = value['pagination'];
+        isRefresh
+            ? _stories = value['stories']
+            : _stories.addAll(value['stories']);
         isLoading = false;
+        paginateLoading = false;
       });
     });
   }
 
   @override
   void initState() {
+    _controller = ScrollController();
+    _controller.addListener(_scrollListener);
     getNotificationsCount();
     getSpecialties();
-    getStories(null);
+    getStories(null, false);
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _controller.removeListener(_scrollListener);
+    _controller.dispose();
+    super.dispose();
   }
 
   @override
@@ -98,7 +132,7 @@ class _StoryViewState extends State<StoryView> {
               MaterialPageRoute(
                   builder: ((context) => const AddStoryView()))).then((value) {
             if (value == true) {
-              getStories(null);
+              getStories(null, true);
             }
           });
         },
@@ -130,12 +164,12 @@ class _StoryViewState extends State<StoryView> {
           displacement: 0,
           onRefresh: () async {
             getNotificationsCount();
-
             getSpecialties();
-            getStories(null);
+            getStories(null, true);
           },
           color: kDarkColor,
           child: SingleChildScrollView(
+            controller: _controller,
             physics: const AlwaysScrollableScrollPhysics(),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -163,8 +197,8 @@ class _StoryViewState extends State<StoryView> {
                                     _selectedSpecialty = specialty;
                                     setState(() {});
                                     specialty.name == "الكل"
-                                        ? getStories(null)
-                                        : getStories(specialty.id);
+                                        ? getStories(null, true)
+                                        : getStories(specialty.id, true);
                                   }
                                 },
                                 child: StoryCategoryWidget(
@@ -211,15 +245,16 @@ class _StoryViewState extends State<StoryView> {
                                 story: story,
                                 onTap: () {
                                   Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => StoriesPageView(
-                                          stories: _stories,
-                                          initialIndex: index,
-                                        ),
-                                      )).then((value) {
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => StoriesPageView(
+                                        stories: _stories,
+                                        initialIndex: index,
+                                      ),
+                                    ),
+                                  ).then((value) {
                                     if (value == true) {
-                                      getStories(null);
+                                      getStories(null, true);
                                     }
                                   });
                                 },
@@ -227,7 +262,16 @@ class _StoryViewState extends State<StoryView> {
                             },
                           ),
                         ),
-                100.verticalSpace,
+                SizedBox(
+                  height: 100,
+                  child: Center(
+                    child: paginateLoading
+                        ? const CircularProgressIndicator(
+                            color: kBleuColor,
+                          )
+                        : const SizedBox(),
+                  ),
+                )
               ],
             ),
           ),
