@@ -63,7 +63,9 @@ class _ShowStoryViewState extends State<ShowStoryView> {
             SizedBox.expand(
               child: InteractiveViewer(
                 child: CachedNetworkImage(
-                  imageUrl: widget.story.images[currentImgIndex].image,
+                  imageUrl: widget.story.images.isNotEmpty
+                      ? widget.story.images[currentImgIndex].image
+                      : "",
                   fit: BoxFit.contain,
                   placeholder: (context, url) => const Center(
                     child: CircularProgressIndicator(

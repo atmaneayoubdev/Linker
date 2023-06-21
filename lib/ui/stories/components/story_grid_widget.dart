@@ -48,46 +48,56 @@ class _StoryGridWidgetState extends State<StoryGridWidget> {
         ),
         child: Stack(
           children: [
-            PageView.builder(
-                physics: const AlwaysScrollableScrollPhysics(),
-                onPageChanged: (value) {
-                  setState(() {
-                    currentIndex = value;
-                  });
-                },
-                controller: controller,
-                itemCount: int.parse(widget.story.imageCount),
-                itemBuilder: (BuildContext ctxt, int index) {
-                  return ClipRRect(
-                    borderRadius: BorderRadius.circular(14.r),
-                    child: Stack(
-                      children: [
-                        SizedBox.expand(
-                          child: CachedNetworkImage(
-                            imageUrl: widget.story.images[index].image,
-                            fit: BoxFit.cover,
-                            placeholder: (context, url) => const Center(
-                              child: CircularProgressIndicator(
-                                color: kDarkColor,
+            widget.story.images.isEmpty
+                ? Container(
+                    // height: double.infinity,
+                    // width: double.infinity,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10.r),
+                      gradient: kVerticalGradiant,
+                    ),
+                  )
+                : PageView.builder(
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    onPageChanged: (value) {
+                      setState(() {
+                        currentIndex = value;
+                      });
+                    },
+                    controller: controller,
+                    itemCount: int.parse(widget.story.imageCount),
+                    itemBuilder: (BuildContext ctxt, int index) {
+                      return ClipRRect(
+                        borderRadius: BorderRadius.circular(14.r),
+                        child: Stack(
+                          children: [
+                            SizedBox.expand(
+                              child: CachedNetworkImage(
+                                imageUrl: widget.story.images[index].image,
+                                fit: BoxFit.cover,
+                                placeholder: (context, url) => const Center(
+                                  child: CircularProgressIndicator(
+                                    color: kDarkColor,
+                                  ),
+                                ),
+                                errorWidget: (context, url, error) =>
+                                    const Center(
+                                  child: SizedBox(),
+                                ),
                               ),
                             ),
-                            errorWidget: (context, url, error) => const Center(
-                              child: SizedBox(),
-                            ),
-                          ),
+                            Container(
+                              // height: double.infinity,
+                              // width: double.infinity,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10.r),
+                                gradient: kVerticalGradiant,
+                              ),
+                            )
+                          ],
                         ),
-                        Container(
-                          // height: double.infinity,
-                          // width: double.infinity,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10.r),
-                            gradient: kVerticalGradiant,
-                          ),
-                        )
-                      ],
-                    ),
-                  );
-                }),
+                      );
+                    }),
             Padding(
               padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 10.w),
               child: Column(

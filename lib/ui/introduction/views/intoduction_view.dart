@@ -104,7 +104,7 @@ class _IntrodictionViewState extends State<IntrodictionView> {
                   borderRadius: BorderRadius.circular(17.r),
                 ),
                 child: Text(
-                  'تخطي',
+                  'تخطى',
                   style: Theme.of(context)
                       .textTheme
                       .bodyLarge!

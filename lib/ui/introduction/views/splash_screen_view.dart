@@ -1,16 +1,15 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:linker/controllers/global_contoller.dart';
 import 'package:linker/helpers/intros_provider.dart';
 import 'package:linker/models/general/intro_model.dart';
+import 'package:linker/ui/introduction/views/intoduction_view.dart';
+import 'package:linker/ui/landing_view.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../helpers/messaging_provider.dart';
 import '../../../models/auth/user_model.dart';
-import '../../landing_view.dart';
-import 'intoduction_view.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -79,22 +78,13 @@ class _SplashScreenState extends State<SplashScreen> {
     SystemChrome.setSystemUIOverlayStyle(
         const SystemUiOverlayStyle(statusBarIconBrightness: Brightness.light));
     return Scaffold(
-      body: Stack(
-        children: [
-          SizedBox.expand(
-            child: Image.asset(
-              'assets/images/splash_background.png',
-              fit: BoxFit.fill,
-            ),
-          ),
-          Center(
-            child: SizedBox(
-              width: 250.w,
-              height: 250.h,
-              child: Image.asset("assets/images/app_logo.png"),
-            ),
-          ),
-        ],
+      body: SizedBox(
+        height: double.infinity,
+        width: double.infinity,
+        child: Image.asset(
+          'assets/images/splash-image.png',
+          fit: BoxFit.cover,
+        ),
       ),
     );
   }

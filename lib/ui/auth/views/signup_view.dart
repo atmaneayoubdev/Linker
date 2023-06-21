@@ -36,8 +36,8 @@ class _SignUpViewState extends State<SignUpView> {
               height: 360.h,
               child: Center(
                 child: Image.asset(
-                  "assets/images/app_logo.png",
-                  height: 200.h,
+                  "assets/images/appforground.png",
+                  height: 100.h,
                 ),
               ),
             ),

@@ -62,8 +62,8 @@ class _SignInViewState extends State<SignInView> {
             height: 360.h,
             child: Center(
               child: Image.asset(
-                "assets/images/app_logo.png",
-                height: 200.h,
+                "assets/images/appforground.png",
+                height: 100.h,
               ),
             ),
           ),
@@ -81,9 +81,12 @@ class _SignInViewState extends State<SignInView> {
                   ),
                   child: Form(
                     key: _formKey,
-                    child: Padding(
+                    child: Container(
                       padding: EdgeInsets.symmetric(horizontal: 40.w),
+                      margin: EdgeInsets.only(
+                          bottom: MediaQuery.of(context).viewInsets.bottom),
                       child: SingleChildScrollView(
+                        physics: const AlwaysScrollableScrollPhysics(),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.center,

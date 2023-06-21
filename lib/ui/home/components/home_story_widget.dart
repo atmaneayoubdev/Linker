@@ -37,7 +37,8 @@ class HomeStoryWidget extends StatelessWidget {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(14.r),
                 child: CachedNetworkImage(
-                  imageUrl: story.images.first.image,
+                  imageUrl:
+                      story.images.isNotEmpty ? story.images.first.image : "",
                   fit: BoxFit.cover,
                   placeholder: (context, url) => const Center(
                     child: SizedBox(),
