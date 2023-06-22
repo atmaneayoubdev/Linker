@@ -15,7 +15,7 @@ class ChatController with ChangeNotifier {
   }) async {
     try {
       Map<String, String> headers = {
-        'Devices_Token': deviceToken,
+        'devices-token': deviceToken,
         'Accept': 'application/json',
         'Authorization': "Bearer $token",
       };
@@ -49,7 +49,7 @@ class ChatController with ChangeNotifier {
   }) async {
     try {
       Map<String, String> headers = {
-        'Devices_Token': deviceToken,
+        'devices-token': deviceToken,
         'Accept': 'application/json',
         'Authorization': "Bearer $token",
       };
@@ -109,7 +109,7 @@ class ChatController with ChangeNotifier {
           followRedirects: false,
           validateStatus: (status) => true,
           headers: {
-            'Devices_Token': deviceToken,
+            'devices-token': deviceToken,
             'Accept': 'application/json',
             'Authorization': "Bearer $token",
           },

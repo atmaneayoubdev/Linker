@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-String baseUrl = "http://linker-beta.tufahatin-sa.com/api/";
+String baseUrl = "https://souq.linker.sa/api/";
 
 const Color kDarkColor = Color.fromRGBO(33, 37, 49, 1);
 const Color kBleuColor = Color.fromRGBO(69, 169, 212, 1);

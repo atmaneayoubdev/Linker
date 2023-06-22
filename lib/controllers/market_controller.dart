@@ -20,7 +20,7 @@ class MarketController with ChangeNotifier {
   }) async {
     try {
       Map<String, String> headers = {
-        'Devices_Token': deviceToken,
+        'devices-token': deviceToken,
         'Accept': 'application/json',
         'Authorization': "Bearer $token",
       };
@@ -61,7 +61,7 @@ class MarketController with ChangeNotifier {
   }) async {
     try {
       Map<String, String> headers = {
-        'Devices_Token': deviceToken,
+        'devices-token': deviceToken,
         'Accept': 'application/json',
         'Authorization': "Bearer $token",
       };
@@ -103,7 +103,7 @@ class MarketController with ChangeNotifier {
       required String deviceToken}) async {
     try {
       Map<String, String> headers = {
-        'Devices_Token': deviceToken,
+        'devices-token': deviceToken,
         'Accept': 'application/json',
         'Authorization': "Bearer $token",
       };
@@ -142,7 +142,7 @@ class MarketController with ChangeNotifier {
   }) async {
     try {
       Map<String, String> headers = {
-        'Devices_Token': deviceToken,
+        'devices-token': deviceToken,
         'Accept': 'application/json',
         'Authorization': "Bearer $token",
       };
@@ -179,7 +179,7 @@ class MarketController with ChangeNotifier {
   }) async {
     try {
       Map<String, String> headers = {
-        'Devices_Token': deviceToken,
+        'devices-token': deviceToken,
         'Accept': 'application/json',
         'Authorization': "Bearer $token",
       };
@@ -224,7 +224,7 @@ class MarketController with ChangeNotifier {
   }) async {
     try {
       Map<String, String> headers = {
-        'Devices_Token': deviceToken,
+        'devices-token': deviceToken,
         'Accept': 'application/json',
         'Authorization': "Bearer $token",
       };
@@ -268,7 +268,7 @@ class MarketController with ChangeNotifier {
   }) async {
     try {
       Map<String, String> headers = {
-        'Devices_Token': deviceToken,
+        'devices-token': deviceToken,
         'Accept': 'application/json',
         'Authorization': "Bearer $token",
       };
@@ -305,7 +305,7 @@ class MarketController with ChangeNotifier {
   }) async {
     try {
       Map<String, String> headers = {
-        'Devices_Token': deviceToken,
+        'devices-token': deviceToken,
         'Accept': 'application/json',
         'Authorization': "Bearer $token",
       };
@@ -342,7 +342,7 @@ class MarketController with ChangeNotifier {
   }) async {
     try {
       Map<String, String> headers = {
-        'Devices_Token': deviceToken,
+        'devices-token': deviceToken,
         'Accept': 'application/json',
         'Authorization': "Bearer $token",
       };
@@ -382,7 +382,7 @@ class MarketController with ChangeNotifier {
   }) async {
     try {
       Map<String, String> headers = {
-        'Devices_Token': deviceToken,
+        'devices-token': deviceToken,
         'Accept': 'application/json',
         'Authorization': "Bearer $token",
       };
@@ -420,7 +420,7 @@ class MarketController with ChangeNotifier {
   }) async {
     try {
       Map<String, String> headers = {
-        'Devices_Token': deviceToken,
+        'devices-token': deviceToken,
         'Accept': 'application/json',
         'Authorization': "Bearer $token",
       };
@@ -452,7 +452,7 @@ class MarketController with ChangeNotifier {
   }) async {
     try {
       Map<String, String> headers = {
-        'Devices_Token': deviceToken,
+        'devices-token': deviceToken,
         'Accept': 'application/json',
         'Authorization': "Bearer $token",
       };
@@ -516,7 +516,7 @@ class MarketController with ChangeNotifier {
           followRedirects: false,
           validateStatus: (status) => true,
           headers: {
-            'Devices_Token': deviceToken,
+            'devices-token': deviceToken,
             'Accept': 'application/json',
             'Authorization': "Bearer $token",
           },
@@ -550,7 +550,7 @@ class MarketController with ChangeNotifier {
   }) async {
     try {
       Map<String, String> headers = {
-        'Devices_Token': deviceToken,
+        'devices-token': deviceToken,
         'Accept': 'application/json',
         'Authorization': "Bearer $token",
       };
@@ -589,7 +589,7 @@ class MarketController with ChangeNotifier {
       var response = await dio.get(
         "${baseUrl}store/show-store/$storeId",
         options: Options(headers: {
-          'Devices_Token': deviceToken,
+          'devices-token': deviceToken,
           'Accept': 'application/json',
           'Authorization': "Bearer $token",
         }),
@@ -618,7 +618,7 @@ class MarketController with ChangeNotifier {
       var response = await dio.get(
         "${baseUrl}store/products/$productId",
         options: Options(headers: {
-          'Devices_Token': deviceToken,
+          'devices-token': deviceToken,
           'Accept': 'application/json',
           'Authorization': "Bearer $token",
         }),
@@ -657,7 +657,7 @@ class MarketController with ChangeNotifier {
       var response = await dio.post(
         "${baseUrl}store/rates",
         options: Options(headers: {
-          'Devices_Token': deviceToken,
+          'devices-token': deviceToken,
           'Accept': 'application/json',
           'Authorization': "Bearer $token",
         }),
@@ -679,7 +679,7 @@ class MarketController with ChangeNotifier {
   }) async {
     try {
       Map<String, String> headers = {
-        'Devices_Token': deviceToken,
+        'devices-token': deviceToken,
         'Accept': 'application/json',
         'Authorization': "Bearer $token",
       };
@@ -709,7 +709,7 @@ class MarketController with ChangeNotifier {
   }) async {
     try {
       Map<String, String> headers = {
-        'Devices_Token': deviceToken,
+        'devices-token': deviceToken,
         'Accept': 'application/json',
         'Authorization': "Bearer $token",
       };

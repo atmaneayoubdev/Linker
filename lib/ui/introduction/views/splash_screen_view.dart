@@ -2,14 +2,15 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:linker/controllers/global_contoller.dart';
+import 'package:linker/helpers/constants.dart';
 import 'package:linker/helpers/intros_provider.dart';
 import 'package:linker/models/general/intro_model.dart';
-import 'package:linker/ui/introduction/views/intoduction_view.dart';
-import 'package:linker/ui/landing_view.dart';
+import 'package:linker/ui/introduction/views/introduction_view.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../helpers/messaging_provider.dart';
 import '../../../models/auth/user_model.dart';
+import '../../landing_view.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -59,16 +60,18 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    Provider.of<MessagingProvider>(context, listen: false).getToken();
-    getIntros().then((value) {
-      checkUser().then((value) {
-        Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => user == null
-                  ? const IntrodictionView()
-                  : const LandingView(isLogging: true),
-            ));
+    Future.delayed(const Duration(milliseconds: 1500), () {
+      Provider.of<MessagingProvider>(context, listen: false).getToken();
+      getIntros().then((value) {
+        checkUser().then((value) {
+          Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => user == null
+                    ? const IntroductionsView()
+                    : const LandingView(isLogging: true),
+              ));
+        });
       });
     });
   }
@@ -78,13 +81,31 @@ class _SplashScreenState extends State<SplashScreen> {
     SystemChrome.setSystemUIOverlayStyle(
         const SystemUiOverlayStyle(statusBarIconBrightness: Brightness.light));
     return Scaffold(
-      body: SizedBox(
-        height: double.infinity,
-        width: double.infinity,
-        child: Image.asset(
-          'assets/images/splash-image.png',
-          fit: BoxFit.cover,
-        ),
+      backgroundColor: kDarkColor,
+      body: Stack(
+        children: [
+          Center(
+            child: Image.asset(
+              'assets/images/appforground.png',
+              height: 130,
+              fit: BoxFit.contain,
+            ),
+          ),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Container(
+              padding: const EdgeInsets.all(20),
+              child: Text(
+                "Linker",
+                textAlign: TextAlign.center,
+                style: Theme.of(context)
+                    .textTheme
+                    .titleLarge!
+                    .copyWith(color: Colors.white, fontSize: 18),
+              ),
+            ),
+          )
+        ],
       ),
     );
   }

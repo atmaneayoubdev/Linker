@@ -80,7 +80,7 @@ class AuthController with ChangeNotifier {
         options: Options(
           followRedirects: false,
           validateStatus: (status) => true,
-          headers: {'Devices_Token': deviceToken, 'Accept': 'application/json'},
+          headers: {'devices-token': deviceToken, 'Accept': 'application/json'},
         ),
         data: {
           'phone': phone,
@@ -135,7 +135,7 @@ class AuthController with ChangeNotifier {
           followRedirects: false,
           validateStatus: (status) => true,
           headers: {
-            'Devices_Token': deviceToken,
+            'devices-token': deviceToken,
             'Accept': 'application/json',
             'Authorization': "Bearer $token",
           },
@@ -207,7 +207,7 @@ class AuthController with ChangeNotifier {
     required String deviceToken,
   }) async {
     Map<String, String> headers = {
-      'Devices_Token': deviceToken,
+      'devices-token': deviceToken,
       'Accept': 'application/json',
       'Authorization': "Bearer $token",
     };
@@ -244,10 +244,13 @@ class AuthController with ChangeNotifier {
       Dio dio = Dio();
       var response = await dio.post(
         "${baseUrl}login",
-        options: Options(headers: {
-          'Devices_Token': deviceToken,
-          'Accept': 'application/json',
-        }),
+        options: Options(
+            followRedirects: false,
+            validateStatus: (status) => true,
+            headers: {
+              'devices-token': deviceToken,
+              'Accept': 'application/json',
+            }),
         data: {
           'object': phoneNumber,
           'password': password,
@@ -283,12 +286,7 @@ class AuthController with ChangeNotifier {
         return response.data['message'];
       }
     } on DioError catch (error) {
-      debugPrint(error.message.toString());
-      debugPrint(error.message.toString());
-      if (error.response!.statusCode == 400) {
-        return error.response!.data['message'];
-      }
-      return "error";
+      return error.response!.data["message"] ?? error.message;
     }
   }
 

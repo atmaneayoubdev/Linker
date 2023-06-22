@@ -116,7 +116,7 @@ class _ForgetOtpViewState extends State<ForgetOtpView> {
                         padding: EdgeInsets.symmetric(horizontal: 40.w),
                         child: Center(
                           child: Text(
-                            "تم ارسال رمز التحقق مكون من 4 ارقام علي رقم هاتفك ${widget.phone}",
+                            "تم ارسال رمز التحقق مكون من 4 ارقام على رقم هاتفك ${widget.phone}",
                             style: Theme.of(context)
                                 .textTheme
                                 .bodyMedium!

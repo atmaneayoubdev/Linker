@@ -10,14 +10,14 @@ import '../../common/large_button.dart';
 import '../components/slider_model.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
-class IntrodictionView extends StatefulWidget {
-  const IntrodictionView({super.key});
+class IntroductionsView extends StatefulWidget {
+  const IntroductionsView({super.key});
 
   @override
-  State<IntrodictionView> createState() => _IntrodictionViewState();
+  State<IntroductionsView> createState() => _IntroductionsViewState();
 }
 
-class _IntrodictionViewState extends State<IntrodictionView> {
+class _IntroductionsViewState extends State<IntroductionsView> {
   List<SliderModel> mySLides = <SliderModel>[];
   int slideIndex = 0;
   PageController? controller;
@@ -96,15 +96,16 @@ class _IntrodictionViewState extends State<IntrodictionView> {
                     curve: Curves.linear);
               },
               child: Container(
-                height: 33.h,
+                // height: 33.h,
+
                 margin: EdgeInsets.symmetric(vertical: 75.h, horizontal: 30.w),
-                padding: EdgeInsets.symmetric(vertical: 5.h, horizontal: 20.w),
+                padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 20.w),
                 decoration: BoxDecoration(
                   color: kDarkGreyColor,
                   borderRadius: BorderRadius.circular(17.r),
                 ),
                 child: Text(
-                  'تخطى',
+                  'تخطي',
                   style: Theme.of(context)
                       .textTheme
                       .bodyLarge!
@@ -112,7 +113,7 @@ class _IntrodictionViewState extends State<IntrodictionView> {
                 ),
               ),
             ),
-            300.verticalSpace,
+            290.verticalSpace,
             Center(
               child: Container(
                 alignment: Alignment.center,

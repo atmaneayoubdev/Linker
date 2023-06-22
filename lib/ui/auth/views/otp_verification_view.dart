@@ -155,7 +155,9 @@ class _OtpVerificationViewState extends State<OtpVerificationView> {
               ? kDarkColor
               : Colors.red,
           content: Text(
-            value.toString(),
+            value == "تم إرسال رساله علي الجوال الخاص بك"
+                ? "تم إرسال رساله على الجوال الخاص بك"
+                : value.toString(),
             style: Theme.of(context)
                 .textTheme
                 .bodySmall!
@@ -191,7 +193,9 @@ class _OtpVerificationViewState extends State<OtpVerificationView> {
                 ? kDarkColor
                 : Colors.red,
             content: Text(
-              value.toString(),
+              value == "تم إرسال رساله علي الجوال الخاص بك"
+                  ? "تم إرسال رساله على الجوال الخاص بك"
+                  : value.toString(),
               style: Theme.of(context)
                   .textTheme
                   .bodySmall!
@@ -233,8 +237,8 @@ class _OtpVerificationViewState extends State<OtpVerificationView> {
                     child: Center(
                       child: Text(
                         !widget.isCreatingStroe
-                            ? "تم ارسال رمز التحقق مكون من 4 ارقام علي رقم هاتفك ${widget.phone!}"
-                            : "تم ارسال رمز التحقق مكون من 4 ارقام علي رقم هاتفك",
+                            ? "تم إرسال رمز التحقق مكون من 4 ارقام على رقم هاتفك ${widget.phone!}"
+                            : "تم إرسال رمز التحقق مكون من 4 ارقام على رقم هاتفك",
                         style: Theme.of(context)
                             .textTheme
                             .bodyMedium!
@@ -294,7 +298,7 @@ class _OtpVerificationViewState extends State<OtpVerificationView> {
                                     : reSendCode();
                               }),
                               child: Text(
-                                "إعادة ارسال الكود",
+                                "إعادة إرسال الكود",
                                 style: Theme.of(context)
                                     .textTheme
                                     .bodyMedium!

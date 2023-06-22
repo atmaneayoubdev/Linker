@@ -19,7 +19,7 @@ class MyProfileController with ChangeNotifier {
   }) async {
     try {
       Map<String, String> headers = {
-        'Devices_Token': deviceToken,
+        'devices-token': deviceToken,
         'Accept': 'application/json',
         'Authorization': "Bearer $token",
       };
@@ -64,7 +64,7 @@ class MyProfileController with ChangeNotifier {
   }) async {
     try {
       Map<String, String> headers = {
-        'Devices_Token': deviceToken,
+        'devices-token': deviceToken,
         'Accept': 'application/json',
         'Authorization': "Bearer $token",
       };
@@ -118,7 +118,7 @@ class MyProfileController with ChangeNotifier {
           followRedirects: false,
           validateStatus: (status) => true,
           headers: {
-            'Devices_Token': deviceToken,
+            'devices-token': deviceToken,
             'Accept': 'application/json',
             'Authorization': "Bearer $token",
           },
@@ -158,7 +158,7 @@ class MyProfileController with ChangeNotifier {
           followRedirects: false,
           validateStatus: (status) => true,
           headers: {
-            'Devices_Token': deviceToken,
+            'devices-token': deviceToken,
             'Accept': 'application/json',
             'Authorization': "Bearer $token",
           },
@@ -192,7 +192,7 @@ class MyProfileController with ChangeNotifier {
       var response = await dio.get(
         "${baseUrl}my-profile",
         options: Options(headers: {
-          'Devices_Token': deviceToken,
+          'devices-token': deviceToken,
           'Accept': 'application/json',
           'Authorization': "Bearer $token",
         }),
@@ -242,7 +242,7 @@ class MyProfileController with ChangeNotifier {
   }) async {
     try {
       Map<String, String> headers = {
-        'Devices_Token': deviceToken,
+        'devices-token': deviceToken,
         'Accept': 'application/json',
         'Authorization': "Bearer $token",
       };
@@ -285,7 +285,7 @@ class MyProfileController with ChangeNotifier {
       var response = await dio.get(
         "${baseUrl}profile/$userId",
         options: Options(headers: {
-          'Devices_Token': deviceToken,
+          'devices-token': deviceToken,
           'Accept': 'application/json',
           'Authorization': "Bearer $token",
         }),
@@ -320,7 +320,7 @@ class MyProfileController with ChangeNotifier {
   }) async {
     try {
       Map<String, String> headers = {
-        'Devices_Token': deviceToken,
+        'devices-token': deviceToken,
         'Accept': 'application/json',
         'Authorization': "Bearer $token",
       };
@@ -360,7 +360,7 @@ class MyProfileController with ChangeNotifier {
   }) async {
     try {
       Map<String, String> headers = {
-        'Devices_Token': deviceToken,
+        'devices-token': deviceToken,
         'Accept': 'application/json',
         'Authorization': "Bearer $token",
       };
@@ -392,7 +392,7 @@ class MyProfileController with ChangeNotifier {
   }) async {
     try {
       Map<String, String> headers = {
-        'Devices_Token': deviceToken,
+        'devices-token': deviceToken,
         'Accept': 'application/json',
         'Authorization': "Bearer $token",
       };
@@ -421,7 +421,7 @@ class MyProfileController with ChangeNotifier {
   }) async {
     try {
       Map<String, String> headers = {
-        'Devices_Token': deviceToken,
+        'devices-token': deviceToken,
         'Accept': 'application/json',
         'Authorization': "Bearer $token",
       };
@@ -458,7 +458,7 @@ class MyProfileController with ChangeNotifier {
   }) async {
     try {
       Map<String, String> headers = {
-        'Devices_Token': deviceToken,
+        'devices-token': deviceToken,
         'Accept': 'application/json',
         'Authorization': "Bearer $token",
       };
@@ -492,7 +492,7 @@ class MyProfileController with ChangeNotifier {
   }) async {
     try {
       Map<String, String> headers = {
-        'Devices_Token': deviceToken,
+        'devices-token': deviceToken,
         'Accept': 'application/json',
         'Authorization': "Bearer $token",
       };
@@ -521,7 +521,7 @@ class MyProfileController with ChangeNotifier {
   }) async {
     try {
       Map<String, String> headers = {
-        'Devices_Token': deviceToken,
+        'devices-token': deviceToken,
         'Accept': 'application/json',
         'Authorization': "Bearer $token",
       };
@@ -564,7 +564,7 @@ class MyProfileController with ChangeNotifier {
           followRedirects: false,
           validateStatus: (status) => true,
           headers: {
-            'Devices_Token': deviceToken,
+            'devices-token': deviceToken,
             'Accept': 'application/json',
             'Authorization': "Bearer $token",
           },
@@ -639,7 +639,7 @@ class MyProfileController with ChangeNotifier {
           followRedirects: false,
           validateStatus: (status) => true,
           headers: {
-            'Devices_Token': deviceToken,
+            'devices-token': deviceToken,
             'Accept': 'application/json',
             'Authorization': "Bearer $token",
           },
@@ -715,7 +715,7 @@ class MyProfileController with ChangeNotifier {
           followRedirects: false,
           validateStatus: (status) => true,
           headers: {
-            'Devices_Token': deviceToken,
+            'devices-token': deviceToken,
             'Accept': 'application/json',
             'Authorization': "Bearer $token",
           },
@@ -765,7 +765,7 @@ class MyProfileController with ChangeNotifier {
           followRedirects: false,
           validateStatus: (status) => true,
           headers: {
-            'Devices_Token': deviceToken,
+            'devices-token': deviceToken,
             'Accept': 'application/json',
             'Authorization': "Bearer $token",
           },
@@ -797,7 +797,7 @@ class MyProfileController with ChangeNotifier {
       var response = await dio.get(
         "${baseUrl}my-profile/$type",
         options: Options(headers: {
-          'Devices_Token': deviceToken,
+          'devices-token': deviceToken,
           'Accept': 'application/json',
           'Authorization': "Bearer $token",
         }),

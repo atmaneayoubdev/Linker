@@ -73,7 +73,7 @@ class GlobalController with ChangeNotifier {
   }) async {
     try {
       Map<String, String> headers = {
-        'Devices_Token': deviceToken,
+        'devices-token': deviceToken,
         'Accept': 'application/json',
         'Authorization': "Bearer $token",
       };
@@ -118,7 +118,7 @@ class GlobalController with ChangeNotifier {
   }) async {
     try {
       Map<String, String> headers = {
-        'Devices_Token': deviceToken,
+        'devices-token': deviceToken,
         'Accept': 'application/json',
         'Authorization': "Bearer $token",
       };

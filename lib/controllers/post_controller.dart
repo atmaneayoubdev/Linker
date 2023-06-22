@@ -17,7 +17,7 @@ class PostController with ChangeNotifier {
   }) async {
     try {
       Map<String, String> headers = {
-        'Devices_Token': deviceToken,
+        'devices-token': deviceToken,
         'Accept': 'application/json',
         'Authorization': "Bearer $token",
       };
@@ -87,7 +87,7 @@ class PostController with ChangeNotifier {
           followRedirects: false,
           validateStatus: (status) => true,
           headers: {
-            'Devices_Token': deviceToken,
+            'devices-token': deviceToken,
             'Accept': 'application/json',
             'Authorization': "Bearer $token",
           },
@@ -138,7 +138,7 @@ class PostController with ChangeNotifier {
           followRedirects: false,
           validateStatus: (status) => true,
           headers: {
-            'Devices_Token': deviceToken,
+            'devices-token': deviceToken,
             'Accept': 'application/json',
             'Authorization': "Bearer $token",
           },
@@ -167,7 +167,7 @@ class PostController with ChangeNotifier {
   }) async {
     try {
       Map<String, String> headers = {
-        'Devices_Token': deviceToken,
+        'devices-token': deviceToken,
         'Accept': 'application/json',
         'Authorization': "Bearer $token",
       };
@@ -198,7 +198,7 @@ class PostController with ChangeNotifier {
   }) async {
     try {
       Map<String, String> headers = {
-        'Devices_Token': deviceToken,
+        'devices-token': deviceToken,
         'Accept': 'application/json',
         'Authorization': "Bearer $token",
       };
@@ -240,7 +240,7 @@ class PostController with ChangeNotifier {
           followRedirects: false,
           validateStatus: (status) => true,
           headers: {
-            'Devices_Token': deviceToken,
+            'devices-token': deviceToken,
             'Accept': 'application/json',
             'Authorization': "Bearer $token",
           },
@@ -283,7 +283,7 @@ class PostController with ChangeNotifier {
           followRedirects: false,
           validateStatus: (status) => true,
           headers: {
-            'Devices_Token': deviceToken,
+            'devices-token': deviceToken,
             'Accept': 'application/json',
             'Authorization': "Bearer $token",
           },
@@ -319,7 +319,7 @@ class PostController with ChangeNotifier {
           followRedirects: false,
           validateStatus: (status) => true,
           headers: {
-            'Devices_Token': deviceToken,
+            'devices-token': deviceToken,
             'Accept': 'application/json',
             'Authorization': "Bearer $token",
           },
@@ -355,7 +355,7 @@ class PostController with ChangeNotifier {
           followRedirects: false,
           validateStatus: (status) => true,
           headers: {
-            'Devices_Token': deviceToken,
+            'devices-token': deviceToken,
             'Accept': 'application/json',
             'Authorization': "Bearer $token",
           },

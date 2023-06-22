@@ -149,6 +149,14 @@ class _AdditionalInfoViewState extends State<AdditionalInfoView> {
                                 textAlign: TextAlign.center,
                                 style: Theme.of(context).textTheme.titleMedium,
                               ),
+                              Text(
+                                '*  ',
+                                textAlign: TextAlign.center,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .titleMedium!
+                                    .apply(color: Colors.red),
+                              ),
                             ],
                           ),
                         ),
