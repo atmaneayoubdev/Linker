@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:linker/helpers/constants.dart';
 import 'package:linker/ui/additional/views/favorite_view.dart';
 import 'package:linker/ui/home/views/home_view.dart';
@@ -134,7 +133,7 @@ class _LandingViewState extends State<LandingView> {
                         ],
                       ),
                     ),
-                    buildNavBarItem("assets/icons/market.svg", 3),
+                    buildNavBarItem("assets/icons/shopping_bag.svg", 3),
                     buildNavBarItem("assets/icons/heart.svg", 4),
                   ],
                 ),
@@ -220,26 +219,26 @@ class _LandingViewState extends State<LandingView> {
                   SizedBox(
                     height: index == 2 ? 0.h : 5.h,
                   ),
-                  Text(
-                    index == 0
-                        ? "رسائل"
-                        : index == 1
-                            ? "القصص"
-                            : index == 3
-                                ? "سوق"
-                                : index == 4
-                                    ? "المفضلة"
-                                    : "",
-                    style: GoogleFonts.tajawal(
-                      fontSize: 13.sp,
-                      fontWeight: _selectedIndex == index
-                          ? FontWeight.w600
-                          : FontWeight.normal,
-                      color: _selectedIndex == index
-                          ? kDarkColor
-                          : const Color.fromRGBO(158, 167, 183, 1),
-                    ),
-                  ),
+                  // Text(
+                  //   index == 0
+                  //       ? "رسائل"
+                  //       : index == 1
+                  //           ? "القصص"
+                  //           : index == 3
+                  //               ? "سوق"
+                  //               : index == 4
+                  //                   ? "المفضلة"
+                  //                   : "",
+                  //   style: GoogleFonts.tajawal(
+                  //     fontSize: 13.sp,
+                  //     fontWeight: _selectedIndex == index
+                  //         ? FontWeight.w600
+                  //         : FontWeight.normal,
+                  //     color: _selectedIndex == index
+                  //         ? kDarkColor
+                  //         : const Color.fromRGBO(158, 167, 183, 1),
+                  //   ),
+                  // ),
                 ],
               ),
             ),

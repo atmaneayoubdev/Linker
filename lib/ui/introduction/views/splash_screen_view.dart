@@ -82,30 +82,12 @@ class _SplashScreenState extends State<SplashScreen> {
         const SystemUiOverlayStyle(statusBarIconBrightness: Brightness.light));
     return Scaffold(
       backgroundColor: kDarkColor,
-      body: Stack(
-        children: [
-          Center(
-            child: Image.asset(
-              'assets/images/appforground.png',
-              height: 130,
-              fit: BoxFit.contain,
-            ),
-          ),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Container(
-              padding: const EdgeInsets.all(20),
-              child: Text(
-                "Linker",
-                textAlign: TextAlign.center,
-                style: Theme.of(context)
-                    .textTheme
-                    .titleLarge!
-                    .copyWith(color: Colors.white, fontSize: 18),
-              ),
-            ),
-          )
-        ],
+      body: Center(
+        child: Image.asset(
+          'assets/images/appforground.png',
+          height: 130,
+          fit: BoxFit.contain,
+        ),
       ),
     );
   }

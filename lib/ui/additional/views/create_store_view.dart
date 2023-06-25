@@ -33,7 +33,7 @@ class _CreateStoreViewState extends State<CreateStoreView> {
   TextEditingController registerNumberController = TextEditingController();
   TextEditingController registerDateController = TextEditingController();
   TextEditingController fullNameController = TextEditingController();
-  bool isSeller = true;
+  bool isworkShop = true;
   bool isCompany = true;
   bool agreeOnTerms = false;
   String finalPhone = '';
@@ -250,52 +250,6 @@ class _CreateStoreViewState extends State<CreateStoreView> {
                                     ),
                                   ),
                                   20.verticalSpace,
-                                  // TextFormField(
-                                  //   style: GoogleFonts.tajawal(
-                                  //       fontSize: 16.sp,
-                                  //       color: kTextColor,
-                                  //       fontWeight: FontWeight.normal),
-                                  //   controller: registerNumberController,
-                                  //   validator: (value) {
-                                  //     if (value == null || value.isEmpty) {
-                                  //       return 'Please enter the register number';
-                                  //     }
-                                  //     return null;
-                                  //   },
-                                  //   decoration: formFieldDecoration!.copyWith(
-                                  //     label: Text(
-                                  //       ' وثيقة العمل الحر / رقم السجل التجاري',
-                                  //       textAlign: TextAlign.center,
-                                  //       style:
-                                  //           Theme.of(context).textTheme.titleMedium,
-                                  //     ),
-                                  //   ),
-                                  // ),
-                                  //20.verticalSpace,
-                                  // TextFormField(
-                                  //   style: GoogleFonts.tajawal(
-                                  //       fontSize: 16.sp,
-                                  //       color: kTextColor,
-                                  //       fontWeight: FontWeight.normal),
-                                  //   controller: registerDateController,
-                                  //   validator: (value) {
-                                  //     if (value == null || value.isEmpty) {
-                                  //       return 'Please enter the register date';
-                                  //     }
-                                  //     return null;
-                                  //   },
-                                  //   decoration: formFieldDecoration!.copyWith(
-                                  //     label: Text(
-                                  //       'تاريخ انتهاء السجل التجاري / وثيقة العمل الحر',
-                                  //       textAlign: TextAlign.center,
-                                  //       style:
-                                  //           Theme.of(context).textTheme.titleMedium,
-                                  //     ),
-                                  //   ),
-                                  // ),
-                                  //20.verticalSpace,
-
-                                  //20.verticalSpace,
                                   Text(
                                     'ترخيص المتجر',
                                     style:
@@ -386,7 +340,7 @@ class _CreateStoreViewState extends State<CreateStoreView> {
                                       GestureDetector(
                                         onTap: () {
                                           setState(() {
-                                            isSeller = true;
+                                            isworkShop = true;
                                           });
                                         },
                                         child: Container(
@@ -396,7 +350,7 @@ class _CreateStoreViewState extends State<CreateStoreView> {
                                             borderRadius: BorderRadius.circular(
                                               14.r,
                                             ),
-                                            color: !isSeller
+                                            color: !isworkShop
                                                 ? const Color.fromRGBO(
                                                     249, 250, 252, 1)
                                                 : kDarkColor,
@@ -408,7 +362,7 @@ class _CreateStoreViewState extends State<CreateStoreView> {
                                                   .textTheme
                                                   .bodySmall!
                                                   .apply(
-                                                      color: isSeller
+                                                      color: isworkShop
                                                           ? Colors.white
                                                           : kDarkColor),
                                             ),
@@ -419,7 +373,7 @@ class _CreateStoreViewState extends State<CreateStoreView> {
                                       GestureDetector(
                                         onTap: () {
                                           setState(() {
-                                            isSeller = false;
+                                            isworkShop = false;
                                           });
                                         },
                                         child: Container(
@@ -429,7 +383,7 @@ class _CreateStoreViewState extends State<CreateStoreView> {
                                             borderRadius: BorderRadius.circular(
                                               14.r,
                                             ),
-                                            color: isSeller
+                                            color: isworkShop
                                                 ? const Color.fromRGBO(
                                                     249, 250, 252, 1)
                                                 : kDarkColor,
@@ -441,7 +395,7 @@ class _CreateStoreViewState extends State<CreateStoreView> {
                                                   .textTheme
                                                   .bodySmall!
                                                   .apply(
-                                                      color: isSeller
+                                                      color: isworkShop
                                                           ? kDarkColor
                                                           : Colors.white),
                                             ),
@@ -451,42 +405,6 @@ class _CreateStoreViewState extends State<CreateStoreView> {
                                     ],
                                   ),
                                   20.verticalSpace,
-                                  // DottedBorder(
-                                  //   radius: Radius.circular(14.r),
-                                  //   borderType: BorderType.RRect,
-                                  //   color: kDarkColor,
-                                  //   // borderPadding: EdgeInsets.zero,
-                                  //   // padding: EdgeInsets.zero,
-                                  //   strokeWidth: 0.5,
-                                  //   dashPattern: const [7, 7],
-                                  //   child: Container(
-                                  //     height: 150.h,
-                                  //     decoration: const BoxDecoration(
-                                  //       color: Color.fromRGBO(249, 250, 252, 1),
-                                  //     ),
-                                  //     child: Center(
-                                  //       child: Column(
-                                  //         mainAxisAlignment:
-                                  //             MainAxisAlignment.center,
-                                  //         children: [
-                                  //           SvgPicture.asset(
-                                  //             'assets/icons/upload_file.svg',
-                                  //             height: 47.h,
-                                  //             width: 62.w,
-                                  //           ),
-                                  //           20.verticalSpace,
-                                  //           Text(
-                                  //             'وثيقة العمل الحر / رفع السجل التجاري',
-                                  //             style: Theme.of(context)
-                                  //                 .textTheme
-                                  //                 .bodyLarge,
-                                  //           ),
-                                  //         ],
-                                  //       ),
-                                  //     ),
-                                  //   ),
-                                  // ),
-                                  //20.verticalSpace,
                                   Text(
                                     'نشاط المتجر',
                                     style:
@@ -642,7 +560,7 @@ class _CreateStoreViewState extends State<CreateStoreView> {
                                               phone: finalPhone,
                                               storeName:
                                                   storeNameController.text,
-                                              storeSpecialty: isSeller
+                                              storeSpecialty: !isworkShop
                                                   ? "retail"
                                                   : "workshops",
                                               storeType: isCompany

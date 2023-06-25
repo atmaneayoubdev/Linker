@@ -10,8 +10,16 @@ import '../models/general/pagination.dart';
 import '../models/general/specialty_model.dart';
 
 class StoryController with ChangeNotifier {
+  void printWarning(String text) {
+    debugPrint('\x1B[33m$text\x1B[0m');
+  }
+
+  void printError(String text) {
+    debugPrint('\x1B[31m$text\x1B[0m');
+  }
+
   ////////////////////Get All Stroeis List//////////////////////
-  static Future getAllStories({
+  Future getAllStories({
     required String token,
     String? specialtyId,
     required String deviceToken,
@@ -37,7 +45,7 @@ class StoryController with ChangeNotifier {
           queryParameters: {
             "page": page,
           });
-      debugPrint(response.data.toString());
+      printWarning(response.data.toString());
 
       if (response.statusCode == 200) {
         List<StroyModel> stories = [];

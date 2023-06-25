@@ -48,7 +48,9 @@ class _StoriesPageViewState extends State<StoriesPageView> {
       child: PageView.builder(
           controller: _controller,
           //onPageChanged: _onPageChanged,
-          onPageChanged: (d) {},
+          onPageChanged: (d) {
+            
+          },
           itemCount: widget.stories.length,
           itemBuilder: (BuildContext ctxt, int index) {
             return GestureDetector(

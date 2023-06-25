@@ -85,13 +85,15 @@ class _StoryViewState extends State<StoryView> {
           ? isLoading = true
           : paginateLoading = true;
     });
-    await StoryController.getAllStories(
+    await StoryController()
+        .getAllStories(
       deviceToken:
           Provider.of<MessagingProvider>(context, listen: false).deviceToken,
       token: Provider.of<UserProvider>(context, listen: false).user.apiToken,
       specialtyId: specialtyId,
       page: storyPagination.currentPage + 1,
-    ).then((value) {
+    )
+        .then((value) {
       setState(() {
         storyPagination = value['pagination'];
         isRefresh
@@ -164,7 +166,7 @@ class _StoryViewState extends State<StoryView> {
           displacement: 0,
           onRefresh: () async {
             getNotificationsCount();
-            getSpecialties();
+            // getSpecialties();
             getStories(null, true);
           },
           color: kDarkColor,

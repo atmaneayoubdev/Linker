@@ -110,7 +110,7 @@ class _ShowStoryViewState extends State<ShowStoryView> {
                   GestureDetector(
                     onTap: () {
                       if (currentImgIndex <
-                          int.parse(widget.story.imageCount)) {
+                          int.parse(widget.story.imageCount) - 1) {
                         setState(() {
                           currentImgIndex++;
                         });
